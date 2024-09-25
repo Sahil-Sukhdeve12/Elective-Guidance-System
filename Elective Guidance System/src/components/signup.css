@@ -1,0 +1,14 @@
+.background-image {
+    background-image: url('../utils/img_back2.jpg');
+    background-size: cover;
+    background-position: center;
+    width: 100%;
+    height: 100vh; /* Full viewport height */
+    display: flex;
+    justify-content: flex-start; /* Align items to the left */
+    align-items: center;
+  }
+  
+  .container {
+    max-width: 500px; /* Adjust the max-width as needed */
+  }

@@ -1,0 +1,20 @@
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Full viewport height */
+    background-image: url('../utils/img_back2.jpg'); /* Path to your background image */
+    background-size: cover;
+    background-position: center;
+    
+  }
+  
+  .login-form-container {
+    width: 100%;
+    max-width: 400px; /* Adjust the max-width as needed */
+    padding: 5px;
+    background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent background for the form */
+    border-radius: 10px; /* Rounded corners */
+    /* min-height:400px; */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add a subtle shadow for better visibility */
+  }

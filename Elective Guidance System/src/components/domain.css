@@ -1,0 +1,21 @@
+.domain-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 80vh; /* Full viewport height */
+    background-color: #f8f9fa; /* Light background color */
+    margin: 0; /* Remove any default margin */
+  }
+  
+  .no-margin {
+    margin-top: 0; /* Remove top margin */
+  }
+  
+  .form-check {
+    margin-bottom: 15px; /* Space between radio buttons */
+  }
+  
+  .btn-primary {
+    width: 150px; /* Increase button width */
+  }
