@@ -12,7 +12,7 @@
   .login-form-container {
     width: 100%;
     max-width: 400px; /* Adjust the max-width as needed */
-    padding: 5px;
+    padding: 0px;
     background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent background for the form */
     border-radius: 10px; /* Rounded corners */
     /* min-height:400px; */

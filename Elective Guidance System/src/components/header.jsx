@@ -15,7 +15,7 @@ const Header = () => {
         <header>
           <img src={logo} alt="logo" className="img-fluid" style={{ height: '50px' }} />
         </header>
-        <button className="btn btn-primary" onClick={handleButtonClick}>
+        <button className="btn btn-primary" onClick={handleButtonClick} style={{width:"80px",marginRight:"10px"}}>
           {isLoggedIn ? 'Logout' : 'Login'}
         </button>
       </div>

@@ -22,7 +22,7 @@ const Login = () => {
             </div>
           </div>
           <div className="d-flex justify-content-between align-items-center mt-3">
-            <p className="mb-0" style={{marginLeft:'85px'}}>Don't have an account?</p>
+            <p className="mb-0" style={{marginLeft:'85px'}}>Don&apos;t have an account?</p>
             <Link to="/signup" className="btn" style={{marginRight:"5px"}}>Signup</Link>
           </div>
         </form>
