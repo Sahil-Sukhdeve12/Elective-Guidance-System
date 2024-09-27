@@ -11,9 +11,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@firebasegen/default": "file:generated/javascript/default",
     "autoprefixer": "^10.4.20",
     "bootstrap": "^5.3.3",
+    "firebase": "^10.13.2",
     "postcss": "^8.4.47",
+    "prop-types": "^15.8.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.26.2"

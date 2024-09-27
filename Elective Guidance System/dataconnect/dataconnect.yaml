@@ -1,0 +1,12 @@
+specVersion: "v1beta"
+serviceId: "Elective Guidance System"
+location: "us-central1"
+schema:
+  source: "./schema"
+  datasource:
+    postgresql:
+      database: "fdcdb"
+      cloudSql:
+        instanceId: "Elective Guidance System-fdc"
+      # schemaValidation: "COMPATIBLE"
+connectorDirs: ["./connector"]
