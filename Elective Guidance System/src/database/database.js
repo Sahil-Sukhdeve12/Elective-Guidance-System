@@ -25,6 +25,10 @@ db.connect((err) => {
     console.log('Connected to MySQL Database!');
 });
 
+app.get('/', (req, res) => {
+    res.send('Hello World!');
+});
+
 // Fetch all tracks
 app.get('/api/tracks', (req, res) => {
     db.query('SELECT * FROM tracks', (err, results) => {
