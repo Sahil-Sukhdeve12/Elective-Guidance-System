@@ -1,7 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useState } from 'react';
-// import { Link } from 'react-router-dom';
-import { doSignUp } from './src/firebase/auth'; // Import the sign-up function
+import { useNavigate } from 'react-router-dom';
+import { doCreateUserWithEmailAndPassword } from '../firebase/auth'; // Correct import path
 import './signup.css'; // Import the CSS file for custom styles
 
 const Signup = () => {
@@ -9,12 +9,13 @@ const Signup = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await doSignUp(email, password, name);
-      // Redirect or show success message
+      await doCreateUserWithEmailAndPassword(email, password);
+      navigate('/'); // Redirect to login page after successful sign-up
     } catch (error) {
       setError(error.message);
     }
