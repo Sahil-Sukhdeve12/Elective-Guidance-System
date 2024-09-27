@@ -1,155 +1,98 @@
-// import { useEffect, useState } from 'react';
-// import axios from 'axios';
-// import 'bootstrap/dist/css/bootstrap.min.css';
+import React, { useState, useEffect } from 'react';
+import Header from './header';
+import './Admin.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
-// const Admin = () => {
-//   const [electives, setElectives] = useState([]);
-//   const [tracks, setTracks] = useState([]);
-//   const [newElective, setNewElective] = useState({ name: '', description: '' });
-//   const [newTrack, setNewTrack] = useState({ name: '', description: '' });
+const Admin = () => {
+    const [trackId, setTrackId] = useState('');
+    const [trackName, setTrackName] = useState('');
+    const [tracks, setTracks] = useState([]);
+    const [isAddingTrack, setIsAddingTrack] = useState(false); // State to toggle add track section
 
-//   useEffect(() => {
-//     fetchElectives();
-//     fetchTracks();
-//   }, []);
+    // Function to fetch tracks from the database
+    const fetchTracks = async () => {
+        const response = await fetch('http://localhost:5000/api/data');
+        const data = await response.json();
+        setTracks(data);
+    };
 
-//   const fetchElectives = async () => {
-//     const response = await axios.get('http://localhost:5000/api/electives');
-//     setElectives(response.data);
-//   };
+    // Function to handle adding a track
+    const addTrack = async () => {
+        const response = await fetch('http://localhost:5000/api/tracks', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ track_id: parseInt(trackId), track_name: trackName }),
+        });
 
-//   const fetchTracks = async () => {
-//     const response = await axios.get('http://localhost:5000/api/tracks');
-//     setTracks(response.data);
-//   };
+        const result = await response.json();
+        alert(result.message); // Alert on successful addition
+        fetchTracks(); // Refresh the track list
+        setTrackId(''); // Clear input fields
+        setTrackName('');
+    };
 
-//   const handleAddElective = async () => {
-//     await axios.post('http://localhost:5000/api/electives', newElective);
-//     fetchElectives();
-//     setNewElective({ name: '', description: '' });
-//   };
+    useEffect(() => {
+        fetchTracks(); // Fetch tracks on component mount
+    }, []);
 
-//   const handleAddTrack = async () => {
-//     await axios.post('http://localhost:5000/api/tracks', newTrack);
-//     fetchTracks();
-//     setNewTrack({ name: '', description: '' });
-//   };
-
-//   const handleDeleteElective = async (id) => {
-//     await axios.delete(`http://localhost:5000/api/electives/${id}`);
-//     fetchElectives();
-//   };
-
-//   const handleDeleteTrack = async (id) => {
-//     await axios.delete(`http://localhost:5000/api/tracks/${id}`);
-//     fetchTracks();
-//   };
-
-//   return (
-//     <div className="container mt-5">
-//       <h1 className="text-center mb-4">Admin Page</h1>
-
-//       <h2>Electives</h2>
-//       <table className="table table-bordered">
-//         <thead>
-//           <tr>
-//             <th>ID</th>
-//             <th>Name</th>
-//             <th>Description</th>
-//             <th>Actions</th>
-//           </tr>
-//         </thead>
-//         <tbody>
-//           {electives.map((elective) => (
-//             <tr key={elective.id}>
-//               <td>{elective.id}</td>
-//               <td>{elective.name}</td>
-//               <td>{elective.description}</td>
-//               <td>
-//                 <button className="btn btn-danger" onClick={() => handleDeleteElective(elective.id)}>Delete</button>
-//               </td>
-//             </tr>
-//           ))}
-//         </tbody>
-//       </table>
-
-//       <h2>Add New Elective</h2>
-//       <div className="mb-3">
-//         <input
-//           type="text"
-//           className="form-control"
-//           placeholder="Name"
-//           value={newElective.name}
-//           onChange={(e) => setNewElective({ ...newElective, name: e.target.value })}
-//         />
-//       </div>
-//       <div className="mb-3">
-//         <input
-//           type="text"
-//           className="form-control"
-//           placeholder="Description"
-//           value={newElective.description}
-//           onChange={(e) => setNewElective({ ...newElective, description: e.target.value })}
-//         />
-//       </div>
-//       <button className="btn btn-primary" onClick={handleAddElective}>Add Elective</button>
-
-//       <h2 className="mt-5">Tracks</h2>
-//       <table className="table table-bordered">
-//         <thead>
-//           <tr>
-//             <th>ID</th>
-//             <th>Name</th>
-//             <th>Description</th>
-//             <th>Actions</th>
-//           </tr>
-//         </thead>
-//         <tbody>
-//           {tracks.map((track) => (
-//             <tr key={track.id}>
-//               <td>{track.id}</td>
-//               <td>{track.name}</td>
-//               <td>{track.description}</td>
-//               <td>
-//                 <button className="btn btn-danger" onClick={() => handleDeleteTrack(track.id)}>Delete</button>
-//               </td>
-//             </tr>
-//           ))}
-//         </tbody>
-//       </table>
-
-//       <h2>Add New Track</h2>
-//       <div className="mb-3">
-//         <input
-//           type="text"
-//           className="form-control"
-//           placeholder="Name"
-//           value={newTrack.name}
-//           onChange={(e) => setNewTrack({ ...newTrack, name: e.target.value })}
-//         />
-//       </div>
-//       <div className="mb-3">
-//         <input
-//           type="text"
-//           className="form-control"
-//           placeholder="Description"
-//           value={newTrack.description}
-//           onChange={(e) => setNewTrack({ ...newTrack, description: e.target.value })}
-//         />
-//       </div>
-//       <button className="btn btn-primary" onClick={handleAddTrack}>Add Track</button>
-//     </div>
-//   );
-// };
-
-// export default Admin;
-
-const Admin=()=>{
-    return(
+    return (
         <div>
-            <h1>Hello</h1>
+            <Header />
+            <div className='container' style={{ width: '100%', height: "100%" }}>
+                <h1 style={{ textAlign: 'center' }}>Admin Page</h1>
+                <div className="split-container">
+                    <div className="left-section" style={{ flex: 1 }}>
+                        <button 
+                            onClick={() => setIsAddingTrack(!isAddingTrack)} 
+                            className="btn btn-primary"
+                        >
+                            {isAddingTrack ? 'Hide Add Track' : 'Add Track'}
+                        </button>
+                        {isAddingTrack && (
+                            <div style={{ marginTop: '10px' }}>
+                                <input
+                                    type="number"
+                                    placeholder="Track ID"
+                                    value={trackId}
+                                    onChange={(e) => setTrackId(e.target.value)}
+                                />
+                                <input
+                                    type="text"
+                                    placeholder="Track Name"
+                                    value={trackName}
+                                    onChange={(e) => setTrackName(e.target.value)}
+                                />
+                                <button onClick={addTrack} className="btn btn-success" style={{ marginLeft: '10px' }}>
+                                    Submit
+                                </button>
+                            </div>
+                        )}
+                    </div>
+                    <div className="right-section" style={{ flex: 1 }}>
+                        <h2>Tracks List</h2>
+                        <table className="table">
+                            <thead>
+                                <tr>
+                                    <th>Track ID</th>
+                                    <th>Track Name</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {tracks.map((track, index) => (
+                                    <tr key={`${track.Track_id}-${index}`}>
+                                        <td>{track.Track_id}</td>
+                                        <td>{track.Track_Name}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
-    )
-}
+    );
+};
 
 export default Admin;
