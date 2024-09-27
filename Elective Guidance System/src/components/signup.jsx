@@ -2,7 +2,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { doCreateUserWithEmailAndPassword } from '../firebase/auth'; // Correct import path
-import './styling/signup.css'; // Import the CSS file for custom styles
+import './signup.css'; // Import the CSS file for custom styles
 import { Link } from 'react-router-dom';
 
 const Signup = () => {
