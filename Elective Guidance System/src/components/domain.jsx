@@ -2,7 +2,7 @@ import { useState } from 'react';
 import Header from "./header";
 import { Link } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './domain.css'; // Import the CSS file for custom styles
+import './styling/domain.css'; // Import the CSS file for custom styles
 
 const Domain = () => {
   const [selectedDomain, setSelectedDomain] = useState('');

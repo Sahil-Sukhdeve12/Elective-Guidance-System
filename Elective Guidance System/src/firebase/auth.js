@@ -61,10 +61,12 @@
 // };
 
 import { auth } from "./firebaseConfig";
+
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
+  sendPasswordResetEmail,
   GoogleAuthProvider,
   signInWithPopup,
 } from "firebase/auth";
@@ -103,6 +105,15 @@ export const doSignInWithGoogle = async () => {
     return result.user;
   } catch (error) {
     console.error('Error signing in with Google:', error);
+    throw error;
+  }
+};
+
+export const doPasswordReset = async (email) => {
+  try {
+    await sendPasswordResetEmail(auth, email);
+  } catch (error) {
+    console.error('Error sending password reset email:', error);
     throw error;
   }
 };

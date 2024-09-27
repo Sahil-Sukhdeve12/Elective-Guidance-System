@@ -4,9 +4,9 @@ import Signup from "./signup";
 import Login from "./login";
 import Domain from "./domain";
 import Subject from "./subject";
-// import Admin from "./Admin";
-// import Header from "./header";
-// import Footer from "./footer";
+import Admin from "./Admin";
+import ForgotPassword from "./forgotPassword";
+import Error from "./Error";
 
 const Body=()=>{
     const appRouter=createBrowserRouter([
@@ -26,10 +26,17 @@ const Body=()=>{
             path:"/subject",
             element:<Subject/>
         },
-        // {
-        //     path:"/admin",
-        //     element:<Admin/>
-        // }
+        {
+            path:"/admin",
+            element:<Admin/>
+        },
+        {
+            path:"/forgotPassword",
+            element:<ForgotPassword/>
+        },{
+            path:"*",
+            element:<Error/>
+        }
     ]);
 
     return(

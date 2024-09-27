@@ -143,3 +143,13 @@
 // };
 
 // export default Admin;
+
+const Admin=()=>{
+    return(
+        <div>
+            <h1>Hello</h1>
+        </div>
+    )
+}
+
+export default Admin;

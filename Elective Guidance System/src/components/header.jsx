@@ -1,12 +1,24 @@
-import { useState } from 'react';
+// import { useState } from 'react';
 import logo from "../utils/logo.png";
+import { doSignOut } from '../firebase/auth';
+import { useNavigate } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Header = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  // const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const navigate=useNavigate();
 
-  const handleButtonClick = () => {
-    setIsLoggedIn(!isLoggedIn);
+  // const handleButtonClick = () => {
+  //   setIsLoggedIn(!isLoggedIn);
+  // };
+
+  const handleLogout = async () => {
+    try {
+      await doSignOut();
+      navigate('/'); // Redirect to home page after logout
+    } catch (error) {
+      console.error('Error logging out:', error);
+    }
   };
 
   return (
@@ -15,8 +27,8 @@ const Header = () => {
         <header>
           <img src={logo} alt="logo" className="img-fluid" style={{ height: '50px' }} />
         </header>
-        <button className="btn btn-primary" onClick={handleButtonClick} style={{width:"80px",marginRight:"10px"}}>
-          {isLoggedIn ? 'Logout' : 'Login'}
+        <button className="btn btn-primary" onClick={handleLogout} style={{width:"80px",marginRight:"10px"}}>
+          Logout
         </button>
       </div>
     </div>

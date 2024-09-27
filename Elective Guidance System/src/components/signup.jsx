@@ -2,7 +2,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { doCreateUserWithEmailAndPassword } from '../firebase/auth'; // Correct import path
-import './signup.css'; // Import the CSS file for custom styles
+import './styling/signup.css'; // Import the CSS file for custom styles
+import { Link } from 'react-router-dom';
 
 const Signup = () => {
   const [name, setName] = useState('');
@@ -65,11 +66,16 @@ const Signup = () => {
               />
             </div>
             <button type="submit" className="btn btn-primary w-100">Sign Up</button>
-          </form>
-        </div>
-      </div>
-    </div>
-  );
+
+            <div className="d-flex justify-content-between align-items-center mt-3">
+  <p className="mb-0" style={{ marginLeft: '100px' }}>Have an account?</p>
+  <Link to="/" className="btn" style={{ marginRight: "40px" }}>Sign in</Link>
+</div>
+</form>
+</div>
+</div>
+</div>
+);
 };
 
 export default Signup;
