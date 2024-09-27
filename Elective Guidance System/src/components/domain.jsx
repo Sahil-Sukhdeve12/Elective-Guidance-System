@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import Header from "./header";
+// import Header from "./header";
 import { Link } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './styling/domain.css'; // Import the CSS file for custom styles
@@ -14,7 +14,7 @@ const Domain = () => {
   return (
     <div>
 
-    <Header />
+    {/* <Header /> */}
     <div className="domain-container">
       
       <h1 className="text-center mb-4 no-margin domain-title">Enter which domain you want to select?</h1>

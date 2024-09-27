@@ -4,8 +4,9 @@ import { doSignInWithEmailAndPassword } from '../firebase/auth'; // Correct impo
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './styling/login.css'; // Import the CSS file for custom styles
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
-const Login = () => {
+const Login = ({setIsAdmin}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -15,8 +16,17 @@ const Login = () => {
     e.preventDefault();
     try {
       await doSignInWithEmailAndPassword(email, password);
-      navigate('/domain'); // Redirect to domain page after successful login
-    } catch (error) {
+      if (email === 'minorprojectadmin@gmail.com' && password === '12@Admin12') {
+        setIsAdmin(true);
+        // navigate('/admin');
+      } else {
+        setIsAdmin(false);
+        // navigate('/domain');
+      }
+      navigate('/domain');
+       // Redirect to domain page after successful login
+    }
+    catch (error) {
       setError(error.message);
     }
   };
@@ -65,4 +75,8 @@ const Login = () => {
   );
 };
 
+// Define prop types
+Login.propTypes = {
+  setIsAdmin: PropTypes.func.isRequired,
+};
 export default Login;

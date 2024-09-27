@@ -1,5 +1,5 @@
 // import { useState } from 'react';
-import Header from "./header";
+// import Header from "./header";
 import 'bootstrap/dist/css/bootstrap.min.css';
 // Import the CSS file for custom styles
 
@@ -29,7 +29,7 @@ const Subject = () => {
 
   return (
     <div>
-      <Header />
+      {/* <Header /> */}
       <h1 className="text-center mb-3">Available Electives in particular semester</h1>
       <div className="container mt-5">
         <form className="text-center">
