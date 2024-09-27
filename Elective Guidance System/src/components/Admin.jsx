@@ -145,7 +145,6 @@ const Admin = () => {
 
     return (
         <div>
-            <Header />
             <div className='container' style={{ width: '100%', height: "100%" }}>
                 <h1 style={{ textAlign: 'center' }}>Admin Page</h1>
                 <div className="split-container">

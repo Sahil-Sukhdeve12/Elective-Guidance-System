@@ -1,85 +1,67 @@
-import { useState } from 'react';
-// import Header from "./header";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './styling/domain.css'; // Import the CSS file for custom styles
 
-const Domain = () => {
-  const [selectedDomain, setSelectedDomain] = useState('');
+const Domain = ({ setSelectedTrack }) => {
+  const [tracks, setTracks] = useState([]);
+  const [error, setError] = useState('');
 
-  const handleDomainChange = (event) => {
-    setSelectedDomain(event.target.value);
+  useEffect(() => {
+    const fetchTracks = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/api/tracks');
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        setTracks(data);
+      } catch (error) {
+        console.error('Error fetching tracks:', error);
+        setError('Failed to load tracks. Please try again later.');
+      }
+    };
+
+    fetchTracks();
+  }, []);
+
+  const handleTrackChange = (event) => {
+    const trackId = event.target.value;
+    setSelectedTrack(trackId); // Set the selected track ID
   };
 
   return (
     <div>
-
-    {/* <Header /> */}
-    <div className="domain-container">
-      
-      <h1 className="text-center mb-4 no-margin domain-title">Enter which domain you want to select?</h1>
-      <form className="text-center">
-        <div className="form-check">
-          <input
-            className="form-check-input"
-            type="radio"
-            name="domain"
-            id="dataMining"
-            value="data mining & information retrieval"
-            checked={selectedDomain === 'data mining & information retrieval'}
-            onChange={handleDomainChange}
-          />
-          <label className="form-check-label" htmlFor="dataMining">
-            Data Mining & Information Retrieval
-          </label>
-        </div>
-        <div className="form-check">
-          <input
-            className="form-check-input"
-            type="radio"
-            name="domain"
-            id="intelligentSystem"
-            value="Intelligent system"
-            checked={selectedDomain === 'Intelligent system'}
-            onChange={handleDomainChange}
-          />
-          <label className="form-check-label" htmlFor="intelligentSystem">
-            Intelligent System
-          </label>
-        </div>
-        <div className="form-check">
-          <input
-            className="form-check-input"
-            type="radio"
-            name="domain"
-            id="security"
-            value="Security"
-            checked={selectedDomain === 'Security'}
-            onChange={handleDomainChange}
-          />
-          <label className="form-check-label" htmlFor="security">
-            Security
-          </label>
-        </div>
-        <div className="form-check">
-          <input
-            className="form-check-input"
-            type="radio"
-            name="domain"
-            id="hpc"
-            value="High Performance Computing"
-            checked={selectedDomain === 'High Performance Computing'}
-            onChange={handleDomainChange}
-          />
-          <label className="form-check-label" htmlFor="hpc">
-            High Performance Computing
-          </label>
-        </div>
-        <Link to="/subject">
-          <button type="button" className="btn btn-primary mt-4">Next</button>
-        </Link>
-      </form>
-    </div>
+      <div className="domain-container">
+        <h1 className="text-center mb-4 no-margin domain-title">Select a Track</h1>
+        {error && <div className="alert alert-danger text-center">{error}</div>}
+        <form className="text-center">
+          <div className="form-group">
+            <label htmlFor="trackSelect">Choose a Domain:</label>
+            <select
+              id="trackSelect"
+              className="form-control"
+              onChange={handleTrackChange}
+            >
+              <option value="" disabled>Select a Domain</option>
+              {tracks.length > 0 ? (
+                tracks.map((track) => (
+                  <option key={track.Track_id} value={track.Track_id}>
+                    {track.Track_Name}
+                  </option>
+                ))
+              ) : (
+                <option disabled>No tracks available</option>
+              )}
+            </select>
+          </div>
+          <Link to="/subject">
+            <button type="button" className="btn btn-primary mt-4" disabled={!setSelectedTrack}>
+              Next
+            </button>
+          </Link>
+        </form>
+      </div>
     </div>
   );
 };

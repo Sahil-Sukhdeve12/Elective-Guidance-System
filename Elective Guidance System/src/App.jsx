@@ -15,14 +15,15 @@ const Layout = ({ isAdmin, setIsAdmin }) => {
   const showHeader = location.pathname !== '/' && location.pathname !== '/signup' && 
   location.pathname!=='/forgotPassword';
 
+  const [selectedTrack, setSelectedTrack] = useState('');
   return (
     <>
       {showHeader && <Header isAdmin={isAdmin} />}
       <Routes>
         <Route path="/" element={<Login setIsAdmin={setIsAdmin} />} />
         <Route path="/signup" element={<Signup />} />
-        <Route path="/domain" element={<Domain />} />
-        <Route path="/subject" element={<Subject />} />
+        <Route path="/domain" element={<Domain setSelectedTrack={setSelectedTrack} />} />
+        <Route path="/subject" element={<Subject selectedTrack={selectedTrack} />} />
         {isAdmin && <Route path="/admin" element={<Admin />} />}
         <Route path="/forgotPassword" element={<ForgotPassword />} />
         <Route path="*" element={<Error />} />
