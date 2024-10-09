@@ -2,8 +2,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { doCreateUserWithEmailAndPassword } from '../firebase/auth'; // Correct import path
-import './styling/signup.css'; // Import the CSS file for custom styles
+import './signup.css'; // Import the CSS file for custom styles
 import { Link } from 'react-router-dom';
+import Category from './components/category';
 
 const Signup = () => {
   const [name, setName] = useState('');
@@ -24,7 +25,10 @@ const Signup = () => {
 
   return (
     <div>
-      <div className="background-image">
+      <div className="background-image" style={{ position: 'absolute',
+  top: '50%',
+  left: '70%',
+  transform: 'translate(-50%, -50%)'}}>
         <div className="container mt-3">
           <form className="border p-4 shadow-sm rounded bg-light" onSubmit={handleSubmit}>
             <h2 className="text-center mb-4">Sign Up</h2>
@@ -69,7 +73,7 @@ const Signup = () => {
 
             <div className="d-flex justify-content-between align-items-center mt-3">
   <p className="mb-0" style={{ marginLeft: '100px' }}>Have an account?</p>
-  <Link to="/" className="btn" style={{ marginRight: "40px" }}>Sign in</Link>
+  <Link to="/Category" className="btn" style={{ marginRight: "40px" }}>Sign in</Link>
 </div>
 </form>
 </div>

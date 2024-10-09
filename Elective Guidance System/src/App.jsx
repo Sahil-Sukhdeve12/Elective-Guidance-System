@@ -8,7 +8,8 @@ import Subject from './components/subject';
 import Admin from './components/Admin';
 import ForgotPassword from './components/forgotPassword';
 import Error from './components/Error';
-import Header from './components/header'; // Import the Header component
+import Header from './components/header';
+import Category from './components/category'
 
 const Layout = ({ isAdmin, setIsAdmin }) => {
   const location = useLocation();
@@ -16,17 +17,20 @@ const Layout = ({ isAdmin, setIsAdmin }) => {
   location.pathname!=='/forgotPassword';
 
   const [selectedTrack, setSelectedTrack] = useState('');
+  const [selectedCategories, setSelectedCategory] = useState('');
   return (
     <>
       {showHeader && <Header isAdmin={isAdmin} />}
       <Routes>
         <Route path="/" element={<Login setIsAdmin={setIsAdmin} />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/category" element={<Category setSelectedCategory={setSelectedCategory} />} />
         <Route path="/domain" element={<Domain setSelectedTrack={setSelectedTrack} />} />
         <Route path="/subject" element={<Subject selectedTrack={selectedTrack} />} />
         {isAdmin && <Route path="/admin" element={<Admin />} />}
         <Route path="/forgotPassword" element={<ForgotPassword />} />
         <Route path="*" element={<Error />} />
+        
       </Routes>
     </>
   );
