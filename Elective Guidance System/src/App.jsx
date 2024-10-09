@@ -9,28 +9,28 @@ import Admin from './components/Admin';
 import ForgotPassword from './components/forgotPassword';
 import Error from './components/Error';
 import Header from './components/header';
-import Category from './components/category'
+import Category from './components/category';
 
-const Layout = ({ isAdmin, setIsAdmin }) => {
+const Layout = ({ isAdmin, setIsAdmin, setTracks }) => {
   const location = useLocation();
   const showHeader = location.pathname !== '/' && location.pathname !== '/signup' && 
-  location.pathname!=='/forgotPassword';
+  location.pathname !== '/forgotPassword';
 
   const [selectedTrack, setSelectedTrack] = useState('');
-  const [selectedCategories, setSelectedCategory] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('');
+
   return (
     <>
       {showHeader && <Header isAdmin={isAdmin} />}
       <Routes>
         <Route path="/" element={<Login setIsAdmin={setIsAdmin} />} />
         <Route path="/signup" element={<Signup />} />
-        <Route path="/category" element={<Category setSelectedCategory={setSelectedCategory} />} />
+        <Route path="/category" element={<Category setSelectedCategory={setSelectedCategory} setTracks={setTracks} />} />
         <Route path="/domain" element={<Domain setSelectedTrack={setSelectedTrack} />} />
         <Route path="/subject" element={<Subject selectedTrack={selectedTrack} />} />
         {isAdmin && <Route path="/admin" element={<Admin />} />}
         <Route path="/forgotPassword" element={<ForgotPassword />} />
         <Route path="*" element={<Error />} />
-        
       </Routes>
     </>
   );
@@ -40,14 +40,16 @@ const Layout = ({ isAdmin, setIsAdmin }) => {
 Layout.propTypes = {
   isAdmin: PropTypes.bool.isRequired,
   setIsAdmin: PropTypes.func.isRequired,
+  setTracks: PropTypes.func.isRequired,
 };
 
 const App = () => {
   const [isAdmin, setIsAdmin] = useState(false);
+  const [tracks, setTracks] = useState([]); // State for tracks
 
   return (
     <Router>
-      <Layout isAdmin={isAdmin} setIsAdmin={setIsAdmin} />
+      <Layout isAdmin={isAdmin} setIsAdmin={setIsAdmin} setTracks={setTracks} />
     </Router>
   );
 };

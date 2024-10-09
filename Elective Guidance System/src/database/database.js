@@ -25,25 +25,43 @@ db.connect((err) => {
     console.log('Connected to MySQL Database!');
 });
 
+// Test route
 app.get('/', (req, res) => {
     res.send('Hello World!');
 });
 
-// Fetch all Category
+// Fetch all categories
 app.get('/api/categories', (req, res) => {
-    db.query('select * from domain_Category;', (err, results) => {
-        if(err) {
+    db.query('SELECT * FROM domain_Category;', (err, results) => {
+        if (err) {
             console.error(err);
             return res.status(500).json({ message: 'Error fetching categories.' });
         }
         res.json(results);
     });
 });
-
-
-// Fetch all tracks
+// Fetch tracks by category and department
 app.get('/api/tracks', (req, res) => {
-    db.query('SELECT * FROM tracks', (err, results) => {
+    const { categoryId, departmentId } = req.query;
+
+    // Base query to fetch tracks
+    let query = 'SELECT t.* FROM tracks t JOIN track_department td ON t.Track_id = td.track_id WHERE 1=1';
+    const params = [];
+
+    // Add category filter if provided
+    if (categoryId) {
+        query += ' AND t.category_id = ?';
+        params.push(categoryId);
+    }
+
+    // Add department filter if provided
+    if (departmentId) {
+        query += ' AND td.department_id = ?';
+        params.push(departmentId);
+    }
+
+    // Execute the query
+    db.query(query, params, (err, results) => {
         if (err) {
             console.error(err);
             return res.status(500).json({ message: 'Error fetching tracks.' });
@@ -54,33 +72,37 @@ app.get('/api/tracks', (req, res) => {
 
 // Add a track
 app.post('/api/tracks', (req, res) => {
-    const { track_id, track_name } = req.body;
-    db.query('INSERT INTO tracks (track_id, track_name) VALUES (?, ?)', [track_id, track_name], (err, results) => {
-        if (err) {
-            console.error(err);
-            return res.status(500).json({ message: 'Error adding track.' });
-        }
-        res.json({ message: 'Track added successfully!', results });
-    });
+    const { track_id, track_name, category_id } = req.body;
+    db.query('INSERT INTO tracks (Track_id, Track_Name, category_id) VALUES (?, ?, ?)', 
+        [track_id, track_name, category_id], 
+        (err, results) => {
+            if (err) {
+                console.error(err);
+                return res.status(500).json({ message: 'Error adding track.' });
+            }
+            res.json({ message: 'Track added successfully!', results });
+        });
 });
 
 // Update a track
 app.put('/api/tracks/:trackId', (req, res) => {
     const trackId = req.params.trackId;
-    const { track_name } = req.body;
-    db.query('UPDATE tracks SET track_name = ? WHERE track_id = ?', [track_name, trackId], (err, results) => {
-        if (err) {
-            console.error(err);
-            return res.status(500).json({ message: 'Error updating track.' });
-        }
-        res.json({ message: 'Track updated successfully!', results });
-    });
+    const { track_name, category_id } = req.body;
+    db.query('UPDATE tracks SET Track_Name = ?, category_id = ? WHERE Track_id = ?', 
+        [track_name, category_id, trackId], 
+        (err, results) => {
+            if (err) {
+                console.error(err);
+                return res.status(500).json({ message: 'Error updating track.' });
+            }
+            res.json({ message: 'Track updated successfully!', results });
+        });
 });
 
 // Delete a track
 app.delete('/api/tracks/:trackId', (req, res) => {
     const trackId = req.params.trackId;
-    db.query('DELETE FROM tracks WHERE track_id = ?', [trackId], (err, results) => {
+    db.query('DELETE FROM tracks WHERE Track_id = ?', [trackId], (err, results) => {
         if (err) {
             console.error(err);
             return res.status(500).json({ message: 'Error deleting track.' });
@@ -104,8 +126,9 @@ app.get('/api/electives/:trackId', (req, res) => {
 // Add an elective
 app.post('/api/electives', (req, res) => {
     const { Elective_Name, Course_Code, Credits, Semester, Track_id } = req.body;
-    db.query('INSERT INTO electives (Elective_Name, Course_Code, Credits, Semester, Track_id) VALUES (?, ?, ?, ?, ?)',
-        [Elective_Name, Course_Code, Credits, Semester, Track_id], (err, results) => {
+    db.query('INSERT INTO electives (Elective_Name, Course_Code, Credits, Semester, Track_id) VALUES (?, ?, ?, ?, ?)', 
+        [Elective_Name, Course_Code, Credits, Semester, Track_id], 
+        (err, results) => {
             if (err) {
                 console.error(err);
                 return res.status(500).json({ message: 'Error adding elective.' });
@@ -119,7 +142,8 @@ app.put('/api/electives/:electiveName', (req, res) => {
     const electiveName = req.params.electiveName;
     const { Course_Code, Credits, Semester } = req.body;
     db.query('UPDATE electives SET Course_Code = ?, Credits = ?, Semester = ? WHERE Elective_Name = ?', 
-        [Course_Code, Credits, Semester, electiveName], (err, results) => {
+        [Course_Code, Credits, Semester, electiveName], 
+        (err, results) => {
             if (err) {
                 console.error(err);
                 return res.status(500).json({ message: 'Error updating elective.' });
@@ -139,7 +163,6 @@ app.delete('/api/electives/:electiveName', (req, res) => {
         res.json({ message: 'Elective deleted successfully!' });
     });
 });
-
 
 // Start server
 app.listen(port, () => {

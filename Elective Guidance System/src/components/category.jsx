@@ -3,9 +3,10 @@ import { Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './styling/category.css'; // Import the CSS file for custom styles
 
-const Category = ({ setSelectedCategory }) => {
+const Category = ({ setSelectedCategory, setTracks }) => {
     const [categories, setCategories] = useState([]);
     const [error, setError] = useState('');
+    const [selectedCategoryId, setSelectedCategoryId] = useState('');
 
     useEffect(() => {
         const fetchCategories = async () => {
@@ -24,11 +25,25 @@ const Category = ({ setSelectedCategory }) => {
 
         fetchCategories();
     }, []);
-
-    const handleCategoryChange = (event) => {
+    
+    const handleCategoryChange = async (event) => {
         const categoryId = event.target.value;
         setSelectedCategory(categoryId); // Set the selected category ID
+
+        // Fetch tracks for the selected category
+        try {
+            const response = await fetch(`http://localhost:5000/api/tracks?categoryId=${categoryId}`);
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const data = await response.json();
+            setTracks(data); // Update the tracks state in the parent component
+        } catch (error) {
+            console.error('Error fetching tracks:', error);
+            setError('Failed to load tracks. Please try again later.');
+        }
     };
+
 
     return (
         <div>
@@ -56,7 +71,7 @@ const Category = ({ setSelectedCategory }) => {
                         </select>
                     </div>
                     <Link to="/domain">
-                        <button type="button" className="btn btn-primary mt-4" disabled={!setSelectedCategory}>
+                        <button type="button" className="btn btn-primary mt-4" disabled={!selectedCategoryId}>
                             Next
                         </button>
                     </Link>
