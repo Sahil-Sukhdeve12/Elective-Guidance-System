@@ -15,7 +15,7 @@ import Profile from './components/profile';
 const Layout = ({ isAdmin, setIsAdmin, setTracks }) => {
   const location = useLocation();
   const showHeader = location.pathname !== '/' && location.pathname !== '/signup' && 
-  location.pathname !== '/forgotPassword';
+    location.pathname !== '/forgotPassword';
 
   const [selectedTrack, setSelectedTrack] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
@@ -26,8 +26,14 @@ const Layout = ({ isAdmin, setIsAdmin, setTracks }) => {
       <Routes>
         <Route path="/" element={<Login setIsAdmin={setIsAdmin} />} />
         <Route path="/signup" element={<Signup />} />
-        <Route path="/category" element={<Category setSelectedCategory={setSelectedCategory} setTracks={setTracks} />} />
-        <Route path="/domain" element={<Domain setSelectedTrack={setSelectedTrack} />} />
+        <Route 
+          path="/category" 
+          element={<Category setSelectedCategory={setSelectedCategory} setTracks={setTracks} />} 
+        />
+        <Route 
+          path="/domain" 
+          element={<Domain selectedCategory={selectedCategory} setSelectedTrack={setSelectedTrack} />} 
+        />
         <Route path="/subject" element={<Subject selectedTrack={selectedTrack} />} />
         {isAdmin && <Route path="/admin" element={<Admin />} />}
         <Route path="/forgotPassword" element={<ForgotPassword />} />

@@ -5,7 +5,7 @@ import './styling/domain.css'; // Import the CSS file for custom styles
 
 const Domain = ({ selectedCategory, setSelectedTrack }) => {
   const [tracks, setTracks] = useState([]);
-  const [error, setError] = useState('');
+  const [error, setError] = useState(null); 
 
   useEffect(() => {
     const fetchTracks = async () => {
@@ -17,6 +17,7 @@ const Domain = ({ selectedCategory, setSelectedTrack }) => {
           throw new Error('Network response was not ok');
         }
         const data = await response.json();
+        console.log("Fetched Tracks: ", data); // Log fetched tracks
         setTracks(data);
       } catch (error) {
         console.error('Error fetching tracks:', error);
@@ -26,6 +27,10 @@ const Domain = ({ selectedCategory, setSelectedTrack }) => {
 
     fetchTracks();
   }, [selectedCategory]); // Re-fetch tracks when the selected category changes
+
+  useEffect(() => {
+    console.log("Tracks updated:", tracks); // Log tracks when they update
+  }, [tracks]);
 
   const handleTrackChange = (event) => {
     const trackId = event.target.value;
@@ -39,7 +44,7 @@ const Domain = ({ selectedCategory, setSelectedTrack }) => {
         {error && <div className="alert alert-danger text-center">{error}</div>}
         <form className="text-center">
           <div className="form-group">
-            <label htmlFor="trackSelect">Choose a Track:</label> {/* Updated label */}
+            <label htmlFor="trackSelect">Choose a Track:</label>
             <select
               id="trackSelect"
               className="form-control"
