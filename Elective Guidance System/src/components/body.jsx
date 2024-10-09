@@ -9,6 +9,8 @@ import Admin from "./Admin";
 import ForgotPassword from "./forgotPassword";
 import Error from "./Error";
 // import Header from "./header";
+import Profile from "./profile";
+import Category from "./category";
 
 const Body=()=>{
     const [isAdmin, setIsAdmin] = useState(false);

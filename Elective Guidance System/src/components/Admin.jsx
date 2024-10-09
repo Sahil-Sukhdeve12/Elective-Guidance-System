@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Header from './header';
 import '../components/styling/admin.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
