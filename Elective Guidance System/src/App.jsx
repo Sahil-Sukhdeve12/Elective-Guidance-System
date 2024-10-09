@@ -10,6 +10,7 @@ import ForgotPassword from './components/forgotPassword';
 import Error from './components/Error';
 import Header from './components/header';
 import Category from './components/category';
+import Profile from './components/profile';
 
 const Layout = ({ isAdmin, setIsAdmin, setTracks }) => {
   const location = useLocation();
@@ -30,6 +31,7 @@ const Layout = ({ isAdmin, setIsAdmin, setTracks }) => {
         <Route path="/subject" element={<Subject selectedTrack={selectedTrack} />} />
         {isAdmin && <Route path="/admin" element={<Admin />} />}
         <Route path="/forgotPassword" element={<ForgotPassword />} />
+        <Route path="/profile" element={<Profile />} />
         <Route path="*" element={<Error />} />
       </Routes>
     </>
