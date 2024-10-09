@@ -43,6 +43,9 @@ const Body=()=>{
         },{
             path:"/category",
             element:<Category/>
+        },{
+            path:"/profile",
+            element:<Profile/>
         }
     ]);
 

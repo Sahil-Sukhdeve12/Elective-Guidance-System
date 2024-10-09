@@ -24,7 +24,7 @@ const Domain = ({ setSelectedTrack }) => {
     };
 
     fetchTracks();
-  }, []);
+  }, [selectedCategories]);
 
   const handleTrackChange = (event) => {
     const trackId = event.target.value;

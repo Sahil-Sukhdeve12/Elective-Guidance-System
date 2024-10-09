@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import './styling/category.css'; // Import the CSS file for custom styles
 
 const Category = ({ setSelectedCategory }) => {
     const [categories, setCategories] = useState([]);
@@ -29,7 +30,7 @@ const Category = ({ setSelectedCategory }) => {
         setSelectedCategory(categoryId); // Set the selected category ID
     };
 
-    return(
+    return (
         <div>
             <div className="category-container">
                 <h1 className="text-center mb-4 no-margin category-title">Select the Elective Category</h1>
@@ -54,7 +55,7 @@ const Category = ({ setSelectedCategory }) => {
                             )}
                         </select>
                     </div>
-                    <Link to="/subject">
+                    <Link to="/domain">
                         <button type="button" className="btn btn-primary mt-4" disabled={!setSelectedCategory}>
                             Next
                         </button>

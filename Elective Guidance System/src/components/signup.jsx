@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { doCreateUserWithEmailAndPassword } from '../firebase/auth'; // Correct import path
 import './signup.css'; // Import the CSS file for custom styles
 import { Link } from 'react-router-dom';
-import Category from './components/category';
+import Category from './category';
 
 const Signup = () => {
   const [name, setName] = useState('');
@@ -73,7 +73,7 @@ const Signup = () => {
 
             <div className="d-flex justify-content-between align-items-center mt-3">
   <p className="mb-0" style={{ marginLeft: '100px' }}>Have an account?</p>
-  <Link to="/Category" className="btn" style={{ marginRight: "40px" }}>Sign in</Link>
+  <Link to="/category" className="btn" style={{ marginRight: "40px" }}>Sign in</Link>
 </div>
 </form>
 </div>

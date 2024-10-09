@@ -21,10 +21,10 @@ const Login = ({setIsAdmin}) => {
         // navigate('/admin');
       } else {
         setIsAdmin(false);
-        // navigate('/domain');
+        // navigate('/category');
       }
-      navigate('/domain');
-       // Redirect to domain page after successful login
+      navigate('/profile');
+       // Redirect to profile page after successful login
     }
     catch (error) {
       setError(error.message);
