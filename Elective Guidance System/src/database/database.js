@@ -29,6 +29,18 @@ app.get('/', (req, res) => {
     res.send('Hello World!');
 });
 
+// Fetch all Category
+app.get('/api/categories', (req, res) => {
+    db.query('select * from domain_Category;', (err, results) => {
+        if(err) {
+            console.error(err);
+            return res.status(500).json({ message: 'Error fetching categories.' });
+        }
+        res.json(results);
+    });
+});
+
+
 // Fetch all tracks
 app.get('/api/tracks', (req, res) => {
     db.query('SELECT * FROM tracks', (err, results) => {
@@ -127,6 +139,7 @@ app.delete('/api/electives/:electiveName', (req, res) => {
         res.json({ message: 'Elective deleted successfully!' });
     });
 });
+
 
 // Start server
 app.listen(port, () => {

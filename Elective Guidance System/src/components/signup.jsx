@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { doCreateUserWithEmailAndPassword } from '../firebase/auth';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './signup.css'; // Import the CSS file
+import './styling/signup.css'; // Import the CSS file for custom styles
 
 const Signup = () => {
   const [name, setName] = useState('');
@@ -23,7 +23,7 @@ const Signup = () => {
   };
 
   return (
-    <div className="background-image" style={{ marginLeft: '380px' }}>
+    <div className="background-image">
       <div className="container">
         <form className="border p-4 shadow-sm rounded bg-light" onSubmit={handleSubmit}>
           <h2 className="text-center mb-4">Sign Up</h2>
@@ -50,12 +50,12 @@ const Signup = () => {
               onChange={(e) => setDepartment(e.target.value)}
               required
             >
-              <option value="" disabled>Select your Department</option>
-              <option value="Electrical Engineering">Artificial Intelligence</option>
-              <option value="Computer Science">Computer Science & Engineering</option>
-              <option value="Mechanical Engineering">Data Science</option>
-              <option value="Civil Engineering">Computer Science & Engineering(Cyber Security)</option>
-              <option value="Chemical Engineering">Information Technology</option>
+              <option value="" disabled>Select your department</option>
+              <option value="Computer Science">Computer Science</option>
+              <option value="Electrical Engineering">Electrical Engineering</option>
+              <option value="Mechanical Engineering">Mechanical Engineering</option>
+              <option value="Civil Engineering">Civil Engineering</option>
+              <option value="Chemical Engineering">Chemical Engineering</option>
             </select>
           </div>
           <div className="mb-3">

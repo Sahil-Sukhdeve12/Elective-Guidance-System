@@ -1,62 +1,63 @@
-// import { useState } from 'react';
-// import Header from "./header";
+import { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-// Import the CSS file for custom styles
 
-const Subject = () => {
-//   const [selectedSubject, setSelectedSubject] = useState('');
+const Subject = ({ selectedTrack }) => {
+  const [electives, setElectives] = useState([]);
+  const [error, setError] = useState('');
 
-  const subjects = [
-    { id: 1, code: 'UAIL311', name: 'Social Network Analysis', semester: '5th', credits: 3 },
-    { id: 2, code: 'UAIL321', name: 'Information Retrieval', semester: '6th', credits: 3 },
-    { id: 3, code: 'UAIL431', name: 'Data Mining', semester: '7th', credits: 3 },
-    {id:4,code:'UAIL441',name:'Reinforcement Learning',semester:'7th',credits:3},{
-        id:5,code:'UAIL451',name:'Recommendation System',semester:'7th',credits:3
-    },{id:6,code:'UAIP451',name:'Recommendation System',semester:'7th',credits:1},{
-        id:7,code:'UAIL461',name:'No SQL Database System',semester:'7th',credits:3
-    },{id:8,code:'UAIP461',name:'No SQL Database System',semester:'7th',credits:1}
-    // Add more subjects as needed
-  ];
+  useEffect(() => {
+    const fetchElectives = async () => {
+      if (!selectedTrack) return; // Do nothing if no track is selected
 
-//   const handleSubjectChange = (event) => {
-//     setSelectedSubject(event.target.value);
-//   };
+      try {
+        const response = await fetch(`http://localhost:5000/api/electives/${selectedTrack}`);
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        setElectives(data);
+      } catch (error) {
+        console.error('Error fetching electives:', error);
+        setError('Failed to load electives. Please try again later.');
+      }
+    };
 
-//   const handleSubmit = (event) => {
-//     event.preventDefault();
-//     alert(`Selected Subject: ${selectedSubject}`);
-//   };
+    fetchElectives();
+  }, [selectedTrack]);
 
   return (
     <div>
-      {/* <Header /> */}
-      <h1 className="text-center mb-3">Available Electives in particular semester</h1>
+      <h1 className="text-center mb-3">Available Electives in the Selected Track</h1>
+      {error && <div className="alert alert-danger text-center">{error}</div>}
       <div className="container mt-5">
-        <form className="text-center">
-          <table className="table table-bordered">
-            <thead>
-              <tr>
-                
-                <th>Elective Code</th>
-                <th>Elective Name</th>
-                <th>Semester</th>
-                <th>Credits</th>
-              </tr>
-            </thead>
-            <tbody>
-              {subjects.map((subject) => (
-                <tr key={subject.id}>
-                  
-                  <td>{subject.code}</td>
-                  <td>{subject.name}</td>
-                  <td>{subject.semester}</td>
-                  <td>{subject.credits}</td>
+        <table className="table table-bordered text-center">
+          <thead>
+            <tr>
+              <th>Elective Name</th>
+              <th>Course Code</th>
+              <th>Credits</th>
+              <th>Semester</th>
+              <th>Track ID</th>
+            </tr>
+          </thead>
+          <tbody>
+            {electives.length > 0 ? (
+              electives.map((elective) => (
+                <tr key={elective.Elective_Name}>
+                  <td>{elective.Elective_Name}</td>
+                  <td>{elective.Course_Code}</td>
+                  <td>{elective.Credits}</td>
+                  <td>{elective.Semester}</td>
+                  <td>{elective.Track_id}</td>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-          {/* <button type="submit" className="btn btn-primary mt-4">Submit</button> */}
-        </form>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="5">No electives available for this track.</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
       </div>
     </div>
   );

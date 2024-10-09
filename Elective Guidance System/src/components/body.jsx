@@ -40,6 +40,12 @@ const Body=()=>{
         },{
             path:"*",
             element:<Error/>
+        },{
+            path:"/category",
+            element:<Category/>
+        },{
+            path:"/profile",
+            element:<Profile/>
         }
     ]);
 
