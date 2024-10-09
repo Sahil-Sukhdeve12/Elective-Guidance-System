@@ -1,5 +1,5 @@
 
-import logo from "../utils/logo.png";
+import logo from "../images_centre/logo.png";
 import { Link } from "react-router-dom";
 import { doSignOut } from '../firebase/auth';
 import { useNavigate } from "react-router-dom";

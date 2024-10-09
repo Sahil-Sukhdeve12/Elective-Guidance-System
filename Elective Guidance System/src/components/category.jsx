@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './styling/category.css'; // Import the CSS file for custom styles
@@ -64,6 +65,9 @@ const Category = ({ setSelectedCategory }) => {
             </div>
         </div>
     );
+};
+Category.propTypes = {
+    setSelectedCategory: PropTypes.func.isRequired,
 };
 
 export default Category;
