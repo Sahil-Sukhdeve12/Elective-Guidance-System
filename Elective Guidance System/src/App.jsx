@@ -7,8 +7,12 @@ import ForgotPassword from './components/forgotPassword';
 import Error from './components/Error';
 import Header from './components/header';
 import Profile from './components/profile';
+
+import UserForm from './components/userForm';
+import { db } from './firebase/firebaseConfig';
 import Category from './components/category'; // Import the Category component
 import Domain from './components/domain';
+
 
 const Layout = ({ isAdmin, setIsAdmin }) => {
   const location = useLocation();
@@ -24,8 +28,12 @@ const Layout = ({ isAdmin, setIsAdmin }) => {
         <Route path="/forgotPassword" element={<ForgotPassword />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/category" element={<Category />} /> 
+<<<<<<< HEAD
         <Route path="/domain/:categoryId" element={<Domain />} />
         <Route path="*" element={<Error />} />
+=======
+        <Route path="*" element={<Error/>} />
+>>>>>>> 6c7c37a5874491fc0ec773db0db0c93022cf68eb
       </Routes>
     </>
   );
@@ -39,9 +47,23 @@ Layout.propTypes = {
 
 const App = () => {
   const [isAdmin, setIsAdmin] = useState(false);
+  const [tracks,setTracks]=useState('');
+
+  // for submission form
+  const handleFormSubmit = async (userInfo) => {
+    try {
+      await db.collection('users').add(userInfo);
+      alert('Information saved successfully!');
+    } catch (error) {
+      console.error('Error saving information: ', error);
+    }
+  };
 
   return (
     <Router>
+      <Layout isAdmin={isAdmin} setIsAdmin={setIsAdmin} setTracks={setTracks} 
+      tracks={tracks}/>
+      <UserForm onSubmit={handleFormSubmit}/>
       <Layout isAdmin={isAdmin} setIsAdmin={setIsAdmin} />
     </Router>
   );
