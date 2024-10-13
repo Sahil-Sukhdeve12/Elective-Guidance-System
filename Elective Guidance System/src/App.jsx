@@ -11,6 +11,8 @@ import Error from './components/Error';
 import Header from './components/header';
 import Category from './components/category';
 import Profile from './components/profile';
+import UserForm from './components/userForm';
+import { db } from './firebase/firebaseConfig';
 
 const Layout = ({ isAdmin, setIsAdmin, setTracks }) => {
   const location = useLocation();
@@ -49,9 +51,20 @@ const App = () => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [tracks, setTracks] = useState([]); // State for tracks
 
+  // for submission form
+  const handleFormSubmit = async (userInfo) => {
+    try {
+      await db.collection('users').add(userInfo);
+      alert('Information saved successfully!');
+    } catch (error) {
+      console.error('Error saving information: ', error);
+    }
+  };
+
   return (
     <Router>
       <Layout isAdmin={isAdmin} setIsAdmin={setIsAdmin} setTracks={setTracks} />
+      <UserForm onSubmit={handleFormSubmit}/>
     </Router>
   );
 };
