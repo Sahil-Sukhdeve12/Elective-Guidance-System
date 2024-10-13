@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import { db } from '../firebase/firebaseConfig';
 
 const Profile = ({ userId }) => {
@@ -35,6 +36,11 @@ const Profile = ({ userId }) => {
       )}
     </div>
   );
+};
+
+// Define prop types for Profile component
+Profile.propTypes = {
+  userId: PropTypes.string.isRequired,
 };
 
 export default Profile;

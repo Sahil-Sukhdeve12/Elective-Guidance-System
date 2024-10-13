@@ -1,5 +1,5 @@
 import { useState } from 'react';
-
+import PropTypes from 'prop-types';
 
 const UserForm = ({ onSubmit }) => {
   const [domain, setDomain] = useState('');
@@ -28,6 +28,11 @@ const UserForm = ({ onSubmit }) => {
       <button type="submit">Submit</button>
     </form>
   );
+};
+
+// Define prop types for Profile component
+UserForm.propTypes = {
+  onSubmit: PropTypes.string.isRequired,
 };
 
 export default UserForm;

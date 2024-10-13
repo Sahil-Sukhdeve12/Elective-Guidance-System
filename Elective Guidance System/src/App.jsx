@@ -7,12 +7,11 @@ import ForgotPassword from './components/forgotPassword';
 import Error from './components/Error';
 import Header from './components/header';
 import Profile from './components/profile';
-<<<<<<< HEAD
+
 import UserForm from './components/userForm';
 import { db } from './firebase/firebaseConfig';
-=======
 import Category from './components/category'; // Import the Category component
->>>>>>> 3c371f31483efc8ea056f20c425642c10952adbf
+
 
 const Layout = ({ isAdmin, setIsAdmin }) => {
   const location = useLocation();
@@ -28,7 +27,7 @@ const Layout = ({ isAdmin, setIsAdmin }) => {
         <Route path="/forgotPassword" element={<ForgotPassword />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/category" element={<Category />} /> 
-        <Route path="*" element={<Error />} />
+        <Route path="*" element={<Error/>} />
       </Routes>
     </>
   );
@@ -42,6 +41,7 @@ Layout.propTypes = {
 
 const App = () => {
   const [isAdmin, setIsAdmin] = useState(false);
+  const [tracks,setTracks]=useState('');
 
   // for submission form
   const handleFormSubmit = async (userInfo) => {
@@ -55,12 +55,10 @@ const App = () => {
 
   return (
     <Router>
-<<<<<<< HEAD
-      <Layout isAdmin={isAdmin} setIsAdmin={setIsAdmin} setTracks={setTracks} />
+      <Layout isAdmin={isAdmin} setIsAdmin={setIsAdmin} setTracks={setTracks} 
+      tracks={tracks}/>
       <UserForm onSubmit={handleFormSubmit}/>
-=======
       <Layout isAdmin={isAdmin} setIsAdmin={setIsAdmin} />
->>>>>>> 3c371f31483efc8ea056f20c425642c10952adbf
     </Router>
   );
 };
