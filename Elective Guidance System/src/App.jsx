@@ -8,6 +8,7 @@ import Error from './components/Error';
 import Header from './components/header';
 import Profile from './components/profile';
 import Category from './components/category'; // Import the Category component
+import Domain from './components/domain';
 
 const Layout = ({ isAdmin, setIsAdmin }) => {
   const location = useLocation();
@@ -23,6 +24,7 @@ const Layout = ({ isAdmin, setIsAdmin }) => {
         <Route path="/forgotPassword" element={<ForgotPassword />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/category" element={<Category />} /> 
+        <Route path="/domain/:categoryId" element={<Domain />} />
         <Route path="*" element={<Error />} />
       </Routes>
     </>

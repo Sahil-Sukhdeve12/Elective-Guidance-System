@@ -41,6 +41,19 @@ app.get('/categories', (req, res) => {
     });
 });
 
+// Fetch tracks based on category
+app.get('/tracks/:categoryId', (req, res) => {
+    const { categoryId } = req.params;
+    db.query('SELECT * FROM tracks WHERE category_id = ?', [categoryId], (err, results) => {
+        if (err) {
+            console.error('Error fetching tracks:', err);
+            return res.status(500).send('Server error');
+        }
+        res.json(results);
+    });
+});
+
+
 // Start server
 app.listen(port, () => {
     console.log(`Server running on http://localhost:${port}`);

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { doCreateUserWithEmailAndPassword } from '../firebase/auth';
+import { handleUserSignup } from '../firebase/signupService'; // Import your user signup handler
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './styling/signup.css'; // Import the CSS file for custom styles
 
@@ -8,14 +9,21 @@ const Signup = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [department, setDepartment] = useState(''); // Add state for department
+  const [department, setDepartment] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const formData = {
+      name,
+      email,
+      password,
+      department,
+    };
+
     try {
-      await doCreateUserWithEmailAndPassword(email, password);
+      await handleUserSignup(formData); // Call the new function
       navigate('/'); // Redirect to login page after successful sign-up
     } catch (error) {
       setError(error.message);

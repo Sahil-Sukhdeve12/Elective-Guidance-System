@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import './styling/category.css'; // Ensure you import your CSS file
+import './styling/category.css'; // Import your CSS file
 
 const Category = () => {
     const [categories, setCategories] = useState([]);
@@ -28,11 +28,7 @@ const Category = () => {
     return (
         <div className="category-container">
             <h1 className="category-title">Select a Category</h1>
-            <select
-                className="form-select custom-select" // Add a custom class for styling
-                onChange={(e) => setSelectedCategory(e.target.value)}
-                value={selectedCategory}
-            >
+            <select onChange={(e) => setSelectedCategory(e.target.value)} value={selectedCategory} className="custom-select">
                 <option value="">--Select a Category--</option>
                 {categories.map((category) => (
                     <option key={category.category_id} value={category.category_id}>
@@ -40,7 +36,7 @@ const Category = () => {
                     </option>
                 ))}
             </select>
-            <button className="btn btn-primary" onClick={handleSelect} disabled={!selectedCategory}>
+            <button onClick={handleSelect} disabled={!selectedCategory} className="btn-primary">
                 Go to Domain
             </button>
         </div>
