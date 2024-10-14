@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import { doc, getDoc } from 'firebase/firestore'; // Import Firestore functions
 import { db } from '../firebase/firebaseConfig';
 
 const Profile = ({ userId }) => {
@@ -8,8 +9,10 @@ const Profile = ({ userId }) => {
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
-        const userDoc = await db.collection('users').doc(userId).get();
-        if (userDoc.exists) {
+        const userDocRef = doc(db, 'users', userId); // Get document reference
+        const userDoc = await getDoc(userDocRef); // Fetch the document
+
+        if (userDoc.exists()) {
           setUserInfo(userDoc.data());
         } else {
           console.log('No such document!');
@@ -28,7 +31,7 @@ const Profile = ({ userId }) => {
       {userInfo ? (
         <div>
           <p>Domain: {userInfo.domain}</p>
-          <p>Semester: {userInfo.semester}</p>
+          <p>Semester: {userInfo.sem}</p>
           <p>Subject: {userInfo.subject}</p>
         </div>
       ) : (

@@ -30,9 +30,9 @@ const UserForm = ({ onSubmit }) => {
   );
 };
 
-// Define prop types for Profile component
+// Define prop types for UserForm component
 UserForm.propTypes = {
-  onSubmit: PropTypes.string.isRequired,
+  onSubmit: PropTypes.func.isRequired, // Change to func
 };
 
 export default UserForm;
