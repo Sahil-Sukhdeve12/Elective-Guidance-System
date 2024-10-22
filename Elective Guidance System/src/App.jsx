@@ -26,6 +26,7 @@ const Layout = ({ isAdmin, setIsAdmin }) => {
         <Route path="/profile" element={<Profile userId='someUserId'/>} />
         <Route path="/category" element={<Category />} />
         <Route path="/domain/:categoryId" element={<Domain />} />
+        <Route path='/admin' />
         <Route path="*" element={<Error />} />
       </Routes>
     </>

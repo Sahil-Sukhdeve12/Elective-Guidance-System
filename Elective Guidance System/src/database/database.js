@@ -54,6 +54,26 @@ app.get('/tracks/:categoryId', (req, res) => {
 });
 
 
+// Endpoint to get electives by track_id
+app.get('/electives', (req, res) => {
+    const { track_id } = req.query;
+
+    if (!track_id) {
+        return res.status(400).json({ error: 'Track ID is required' });
+    }
+
+    const query = `SELECT * FROM electives WHERE Track_id = ?`;
+    db.query(query, [track_id], (err, results) => {
+        if (err) {
+            return res.status(500).json({ error: 'Failed to fetch electives' });
+        }
+
+        res.json(results);
+    });
+});
+
+
+
 // Start server
 app.listen(port, () => {
     console.log(`Server running on http://localhost:${port}`);
