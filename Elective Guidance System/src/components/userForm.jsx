@@ -11,7 +11,8 @@ const UserForm = ({ onSubmit }) => {
     onSubmit({ domain, semester, subject });
   };
 
-  return (
+  return (<div></div>
+    /*
     <form onSubmit={handleSubmit}>
       <div>
         <label>Domain:</label>
@@ -26,7 +27,7 @@ const UserForm = ({ onSubmit }) => {
         <input type="text" value={subject} onChange={(e) => setSubject(e.target.value)} required />
       </div>
       <button type="submit">Submit</button>
-    </form>
+    </form>*/
   );
 };
 

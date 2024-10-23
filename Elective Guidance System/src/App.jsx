@@ -11,6 +11,7 @@ import UserForm from './components/userForm';
 import { db } from './firebase/firebaseConfig';
 import Category from './components/category';
 import Domain from './components/domain';
+import Admin from './components/Admin';
 
 const Layout = ({ isAdmin, setIsAdmin }) => {
   const location = useLocation();
@@ -26,7 +27,7 @@ const Layout = ({ isAdmin, setIsAdmin }) => {
         <Route path="/profile" element={<Profile userId='someUserId'/>} />
         <Route path="/category" element={<Category />} />
         <Route path="/domain/:categoryId" element={<Domain />} />
-        <Route path='/admin' />
+        <Route path='/admin' element={<Admin/>}/>
         <Route path="*" element={<Error />} />
       </Routes>
     </>

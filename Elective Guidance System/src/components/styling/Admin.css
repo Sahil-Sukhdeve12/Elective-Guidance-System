@@ -1,0 +1,164 @@
+/* Main container */
+.admin-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    background-color: #f4f4f9;
+    height: 100vh;
+}
+
+/* Header section */
+.admin-header {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Stats Section */
+.admin-stats {
+    height: 200px;
+    width: 90%;
+    border-radius: 15px;
+    background-color: #2e6da46c;
+    margin-bottom: 20px;
+}
+
+/* Options container - filter and student data, taking up about 60% */
+.option-container {
+    display: flex;
+    justify-content: space-between;
+    width: 90%;
+    align-items: flex-start;
+    gap: 20px; /* Adds space between filter/student-data and the buttons */
+}
+
+/* Container for filter and student data */
+.container-1 {
+    display: flex;
+    flex-direction: column;
+    width: 75%;
+    gap: 20px; /* Adds space between filter and student data */
+}
+
+/* Filter and student data styling */
+.data-filter {
+    height: 100px;
+    background-color: #cfcfcf;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: bold;
+    color: #555;
+    width: 100%;
+}
+
+.student-data {
+    height: 400px;
+    background-color: #cfcfcf;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: bold;
+    color: #555;
+    width: 100%;
+}
+
+/* Button container aligned to the right */
+.edit-options {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: flex-start; /* Ensure buttons are aligned to the top */
+    gap: 10px; /* Reduced gap to bring buttons closer */
+    margin-top: 20px; /* Adds space between the toggle button and the first edit option */
+}
+
+/* Primary Edit button */
+.btn-primary {
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 24px;
+    font-size: 18px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #45a049;
+}
+
+/* Secondary buttons for categories, tracks, and electives */
+.btn-secondary {
+    background-color: #5bc0de;
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 100%; /* Ensures the buttons stretch across */
+}
+
+.btn-secondary:hover {
+    background-color: #46b8da;
+}
+
+/* CRUD container - aligned centrally and evenly spaced */
+.crud-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%; /* Ensures CRUD buttons take the available width */
+    margin-top: 10px;
+}
+
+/* CRUD buttons */
+.crud-btn {
+    background-color: #f0ad4e;
+    color: white;
+    padding: 10px 20px; /* Increased padding for better spacing */
+    font-size: 14px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 100%; /* Make CRUD buttons take full width of the container */
+}
+
+.crud-btn:hover {
+    background-color: #ec971f;
+}
+
+/* Footer download button */
+.admin-footer {
+    margin-top: 20px;
+    display: flex;
+    justify-content: flex-end;
+    width: 90%;
+}
+
+.btn-download {
+    background-color: #337ab7;
+    color: white;
+    padding: 12px 24px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-download:hover {
+    background-color: #2e6da4;
+}
