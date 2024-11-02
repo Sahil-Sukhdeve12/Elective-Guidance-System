@@ -1,7 +1,6 @@
 import express from 'express';
 import mysql from 'mysql2/promise'; // Use promise-based mysql2 for async/await
 import cors from 'cors';
-import { toggleEditOptions } from '../components/Admin'; // Ensure this is used where necessary
 
 const app = express();
 const port = 5000;
@@ -11,9 +10,9 @@ app.use(express.json()); // For parsing application/json
 
 // MySQL connection configuration
 const dbConfig = {
-    host: 'localhost',
-    user: 'root',
-    password: '12345',
+    host: 'minordb.c5w0ua8imsf1.eu-north-1.rds.amazonaws.com',
+    user: 'admin',
+    password: '12Pass12',
     database: 'minor_project',
 };
 
@@ -50,7 +49,7 @@ app.get('/', (req, res) => {
 // Get all departments
 app.get('/departments', async (req, res) => {
     try {
-        const [results] = await db.query('SELECT * FROM departments');
+        const results = await db.query('SELECT * FROM departments');
         res.json(results);
     } catch (err) {
         console.error('Error fetching departments:', err);
@@ -103,7 +102,7 @@ app.delete('/departments/:id', async (req, res) => {
 // --------------------
 
 // Get all categories
-app.get('/domain_Category', async (req, res) => {
+app.get('/categories', async (req, res) => {
     try {
         const [results] = await db.query('SELECT * FROM domain_Category');
         res.json(results);
