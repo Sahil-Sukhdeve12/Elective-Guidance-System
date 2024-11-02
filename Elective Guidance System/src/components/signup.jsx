@@ -1,15 +1,17 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { db } from '../firebase/firebaseConfig'; // Import the Firestore instance
 import { collection, addDoc } from 'firebase/firestore';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import axios from 'axios';
 import './styling/signup.css'; // Import the CSS file for custom styles
 
 const Signup = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [department, setDepartment] = useState('');
+  const [department, setDepartment] = useState(''); // Change to string for the selected department
+  const [departmentsList, setDepartmentsList] = useState([]); // New state for departments list
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
@@ -29,6 +31,22 @@ const Signup = () => {
       setError(error.message);
     }
   };
+
+  useEffect(() => {
+    const fetchDepartments = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/departments');
+        const departments = response.data[0]; // Get the first array
+        console.log(departments); // Check the structure
+        setDepartmentsList(departments); // Set the departments list
+      } catch (error) {
+        console.error('Error fetching departments:', error);
+      }
+    };
+
+    fetchDepartments();
+  }, []);
+
 
   return (
     <div className="signup-container">
@@ -65,16 +83,22 @@ const Signup = () => {
             required
           />
         </div>
-        <div className="form-group">
-          <label>Department</label>
-          <input
-            type="text"
-            className="form-control"
-            value={department}
-            onChange={(e) => setDepartment(e.target.value)}
-            required
-          />
-        </div>
+        <select
+          className="form-control"
+          value={department}
+          onChange={(e) => setDepartment(e.target.value)}
+          required
+        >
+          <option value="" disabled>Select a department</option>
+          {departmentsList.map((dept) => (
+            <option key={dept.department_id} value={dept.department_name}>
+              {dept.department_name}
+            </option>
+          ))}
+        </select>
+
+
+
         <button type="submit" className="btn btn-primary">Sign Up</button>
       </form>
     </div>
