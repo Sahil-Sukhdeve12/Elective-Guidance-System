@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { doPasswordReset } from '../firebase/auth'; // Correct import path
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './styling/forgotPassword.css'; // Import the CSS file for custom styles
+// import '../styling/forgotPassword.css'; // Import the CSS file for custom styles
+import './styling/forgotPassword.css';
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
@@ -38,7 +39,10 @@ const ForgotPassword = () => {
             required
           />
         </div>
-        <button type="submit" className="btn btn-primary w-100">Send Password Reset Email</button>
+        <div className="d-flex justify-content-center">
+        <button type="submit" className="btn btn-primary">Send Password Reset Email</button>
+        </div>
+
       </form>
     </div>
   );

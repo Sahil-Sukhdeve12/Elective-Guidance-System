@@ -12,6 +12,7 @@ import { db } from './firebase/firebaseConfig';
 import Category from './components/category';
 import Domain from './components/domain';
 import Admin from './components/Admin';
+import Subject from './components/subject';
 
 const Layout = ({ isAdmin, setIsAdmin }) => {
   const location = useLocation();
@@ -26,9 +27,11 @@ const Layout = ({ isAdmin, setIsAdmin }) => {
         <Route path="/forgotPassword" element={<ForgotPassword />} />
         <Route path="/profile" element={<Profile userId='someUserId'/>} />
         <Route path="/category" element={<Category />} />
-        <Route path="/domain/:categoryId" element={<Domain />} />
+        {/* <Route path="/domain/:categoryId" element={<Domain />} /> */}
+        <Route path="/domain" element={<Domain />} />
         <Route path='/admin' element={<Admin/>}/>
         <Route path="*" element={<Error />} />
+        <Route path="/subject" element={<Subject />} />
       </Routes>
     </>
   );

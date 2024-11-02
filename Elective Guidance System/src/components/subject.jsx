@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom'; // To get the selected Track_id from URL params
-import './styling/subject.css'; // Import your CSS for styling
+// import './styling/subject.css'; // Import your CSS for styling
 
 const Subject = () => {
     const { trackId } = useParams(); // Extract Track_id from the route params

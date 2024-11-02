@@ -18,13 +18,13 @@ const Login = ({setIsAdmin}) => {
       await doSignInWithEmailAndPassword(email, password);
       if (email === 'minorprojectadmin@gmail.com' && password === '12@Admin12') {
         setIsAdmin(true);
-        // navigate('/admin');
       } else {
         setIsAdmin(false);
-        // navigate('/category');
       }
       navigate('/profile');
        // Redirect to profile page after successful login
+
+      /* in profile page we will show user details  */
     }
     catch (error) {
       setError(error.message);
@@ -60,10 +60,12 @@ const Login = ({setIsAdmin}) => {
             required
           />
         </div>
-        <button type="submit" className="btn btn-primary w-100">Sign In</button>
+        <div className="d-flex justify-content-center">
+          <button type="submit" className="btn btn-primary w-80">Sign In</button>
+        </div>
         
         <div className="d-flex justify-content-between align-items-center mt-3">
-            <p className="mb-0" style={{marginLeft:'80px'}}>Don&apos;t have an account?</p>
+            <p className="mb-0" style={{marginLeft:'100px'}}>Don&apos;t have an account?</p>
             <Link to="/signup" className="btn" style={{marginRight:'10px'}}>Signup</Link>
         </div>
         <div className="d-flex justify-content-end" style={{marginLeft:'80px'}}>

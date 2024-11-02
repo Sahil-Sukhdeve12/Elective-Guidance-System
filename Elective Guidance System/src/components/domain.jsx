@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { getFirestore, doc, getDoc } from "firebase/firestore"; 
 import { app } from '../firebase/firebaseConfig'; // Import your Firebase config
-import './styling/domain.css'; // Import your CSS file
+import '../components/styling/domain.css'; // Import your CSS file
+
 
 const db = getFirestore(app); // Use the app instance here
 
@@ -54,19 +55,21 @@ const Domain = () => {
     };
 
     return (
-        <div className="domain-container">
-            <h1 className="domain-title">Select a Track</h1>
-            <select onChange={(e) => setSelectedTrack(e.target.value)} value={selectedTrack} className="custom-select">
-                <option value="">--Select a Track--</option>
-                {tracks.map((track) => (
-                    <option key={track.Track_id} value={track.Track_id}>
-                        {track.Track_Name}
-                    </option>
-                ))}
-            </select>
-            <button onClick={handleSelect} disabled={!selectedTrack} className="btn-primary">
-                Go to Electives
-            </button>
+        <div className="d-flex justify-content-center align-items-center vh-100">
+            <div className="domain-container text-center" style={{ marginTop: '-50px' }}>
+                <h1 className="domain-title">Select a Track</h1>
+                <select onChange={(e) => setSelectedTrack(e.target.value)} value={selectedTrack} className="custom-select mb-3">
+                    <option value="">Select a Track</option>
+                    {tracks.map((track) => (
+                        <option key={track.Track_id} value={track.Track_id}>
+                            {track.Track_Name}
+                        </option>
+                    ))}
+                </select>
+                <button onClick={handleSelect} disabled={!selectedTrack} className="btn btn-primary">
+                    Go to Electives
+                </button>
+            </div>
         </div>
     );
 };
