@@ -55,8 +55,8 @@ const Domain = () => {
     };
 
     return (
-        <div className="d-flex justify-content-center align-items-center vh-100">
-            <div className="domain-container text-center" style={{ marginTop: '-50px' }}>
+        <div className="d-flex justify-content-center align-items-center vh-75">
+            <div className="domain-container text-center" style={{ marginTop: '100px' }}>
                 <h1 className="domain-title">Select a Track</h1>
                 <select onChange={(e) => setSelectedTrack(e.target.value)} value={selectedTrack} className="custom-select mb-3">
                     <option value="">Select a Track</option>

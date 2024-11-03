@@ -63,7 +63,7 @@ const Login = ({setIsAdmin}) => {
             required
           />
         </div>
-        {/* {error && <p>{error}</p>} */}
+        
         <div className="d-flex justify-content-center">
           <button type="submit" className="btn btn-primary w-80">Sign In</button>
         </div>

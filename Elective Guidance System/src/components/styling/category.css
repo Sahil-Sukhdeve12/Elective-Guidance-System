@@ -15,9 +15,9 @@
     width: 90%; /* Set width to 90% for smaller screens */
 }
 
-.category-container:hover {
-    transform: translateY(-5px); /* Slight upward movement on hover */
-}
+/* .category-container:hover {
+    transform: translateY(-5px);
+} */
 
 .category-title {
     font-size: 2.5rem; /* Increase font size */
@@ -66,3 +66,10 @@
     background-color: #c0c0c0; /* Grey out disabled button */
     cursor: not-allowed; /* Not-allowed cursor */
 }
+
+.center-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80vh; /* Full viewport height */
+  }

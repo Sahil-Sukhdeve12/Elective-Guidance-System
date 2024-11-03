@@ -26,6 +26,7 @@ const Category = () => {
     };
 
     return (
+        <div className="center-container">
         <div className="category-container">
             <h1 className="category-title">Select a Category</h1>
             <select onChange={(e) => setSelectedCategory(e.target.value)} value={selectedCategory} className="custom-select">
@@ -39,6 +40,7 @@ const Category = () => {
             <button onClick={handleSelect} disabled={!selectedCategory} className="btn-primary">
                 Go to Domain
             </button>
+        </div>
         </div>
     );
 };

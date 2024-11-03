@@ -15,6 +15,7 @@ const Signup = () => {
   const [department, setDepartment] = useState(''); // Change to string for the selected department
   const [departmentsList, setDepartmentsList] = useState([]); // New state for departments list
   const [error, setError] = useState('');
+  const [enrollment_no,setenrollment_no]=useState([]);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -24,6 +25,7 @@ const Signup = () => {
       email,
       password,
       department,
+      enrollment_no
     };
 
     try {
@@ -85,6 +87,17 @@ const Signup = () => {
         </div>
 
         <div className="form-group">
+          <label>Enrollment Number</label>
+          <input
+            type="text"
+            className="form-control"
+            value={enrollment_no}
+            onChange={(e) => setenrollment_no(e.target.value)}
+            required
+          />
+        </div>
+
+        <div className="form-group">
           <label>Email</label>
           <input
             type="email"
@@ -94,6 +107,7 @@ const Signup = () => {
             required
           />
         </div>
+
         <div className="form-group">
           <label>Password</label>
           <input
