@@ -2,11 +2,11 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { getFirestore, doc, getDoc } from "firebase/firestore"; 
-import { app } from '../firebase/firebaseConfig'; // Import your Firebase config
-import '../components/styling/domain.css'; // Import your CSS file
+import { app } from '../firebase/firebaseConfig';
+import { useUser } from '../contexts/userContext/UserContext'; // Adjust the path as necessary
+import '../components/styling/domain.css'; 
 
-
-const db = getFirestore(app); // Use the app instance here
+const db = getFirestore(app);
 
 const Domain = () => {
     const { categoryId } = useParams();
@@ -14,31 +14,37 @@ const Domain = () => {
     const [selectedTrack, setSelectedTrack] = useState('');
     const [userDepartment, setUserDepartment] = useState('');
     const navigate = useNavigate();
+    const { enrollmentNo } = useUser(); // Get enrollmentNo from UserContext
 
     useEffect(() => {
         const fetchUserDepartment = async () => {
-            // Replace 'userId' with the actual ID of the user
-            const userId = 'userId'; 
-            const userDoc = await getDoc(doc(db, "users", userId));
+            if (!enrollmentNo) return; // Check if enrollmentNo is available
+
+            const userDoc = await getDoc(doc(db, "users", enrollmentNo)); // Use enrollmentNo to fetch the user
 
             if (userDoc.exists()) {
                 setUserDepartment(userDoc.data().department);
             } else {
                 console.error("No such document!");
+                // Handle the error (e.g., navigate or show a message)
             }
         };
 
         fetchUserDepartment();
-    }, []);
+    }, [enrollmentNo]); // Run this effect when enrollmentNo changes
 
     useEffect(() => {
         const fetchTracks = async () => {
             try {
                 const response = await axios.get(`http://localhost:5000/tracks/${categoryId}`);
-                const filteredTracks = response.data.filter(track => {
-                    // Check if the track is available for the user's department
-                    return track.department_id === userDepartment; // Adjust based on your data structure
-                });
+                const allTracks = response.data;
+
+                // Fetch track IDs associated with the user's department
+                const departmentResponse = await axios.get(`http://localhost:5000/track_department?department_id=${userDepartment}`);
+                const validTrackIds = departmentResponse.data.map(track => track.track_id);
+
+                // Filter tracks to only include those valid for the user's department
+                const filteredTracks = allTracks.filter(track => validTrackIds.includes(track.Track_id));
                 setTracks(filteredTracks);
             } catch (error) {
                 console.error('Error fetching tracks:', error);

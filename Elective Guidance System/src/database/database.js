@@ -48,14 +48,19 @@ app.get('/', (req, res) => {
 
 // Get all departments
 app.get('/departments', async (req, res) => {
+    const connection = await initializeDatabase(); // Ensure you have a connection
     try {
-        const results = await db.query('SELECT * FROM departments');
-        res.json(results);
+        const [results] = await connection.execute('SELECT * FROM departments');
+        res.json(results); // Send the results as JSON
     } catch (err) {
         console.error('Error fetching departments:', err);
         res.status(500).send('Server error');
+    } finally {
+        // Close the connection if necessary
+        await connection.end();
     }
 });
+
 
 // Create a department
 app.post('/departments', async (req, res) => {
@@ -164,6 +169,35 @@ app.get('/tracks', async (req, res) => {
     } catch (err) {
         console.error('Error fetching tracks:', err);
         res.status(500).send('Server error');
+    }
+});
+
+
+// Endpoint to get track IDs for a specific department
+app.get('/track_department', async (req, res) => {
+    const departmentId = req.query.department_id; // Get department_id from query parameters
+    const connection = await initializeDatabase(); // Ensure you have a connection
+
+    if (!departmentId) {
+        return res.status(400).send('Department ID is required');
+    }
+
+    try {
+        // Query to get track IDs associated with the specified department
+        const [results] = await connection.execute(`
+            SELECT Track_id 
+            FROM track_department 
+            WHERE department_id = ?`, 
+            [departmentId]
+        );
+
+        res.json(results); // Send the results as JSON
+    } catch (err) {
+        console.error('Error fetching track department associations:', err);
+        res.status(500).send('Server error');
+    } finally {
+        // Close the connection if necessary
+        await connection.end();
     }
 });
 
@@ -277,8 +311,7 @@ app.delete('/electives/:courseCode', async (req, res) => {
 });
 
 // Start server
-app.listen(port, '0.0.0.0', () => {
-    console.log(`Server is running on http://0.0.0.0:${port}`);
+app.listen(port, () => {
+    console.log(`Server running on http://localhost:${port}`);
 });
-
 
