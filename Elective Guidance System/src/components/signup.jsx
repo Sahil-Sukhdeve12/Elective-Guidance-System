@@ -1,10 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState} from 'react';
+import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { db } from '../firebase/firebaseConfig'; // Import the Firestore instance
 import { collection, addDoc } from 'firebase/firestore';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
 import './styling/signup.css'; // Import the CSS file for custom styles
+// import Login from './login';
 
 const Signup = () => {
   const [name, setName] = useState('');
@@ -51,7 +53,7 @@ const Signup = () => {
   return (
     <div className="signup-container">
       <form onSubmit={handleSubmit}>
-        <h2>Sign Up</h2>
+        <h2 style={{textAlign:"center"}}>Sign Up</h2>
         {error && <p className="error">{error}</p>}
         <div className="form-group">
           <label>Name</label>
@@ -63,6 +65,25 @@ const Signup = () => {
             required
           />
         </div>
+
+        <div>
+        <label>Department</label>
+        <select
+          className="form-control"
+          value={department}
+          onChange={(e) => setDepartment(e.target.value)}
+          required 
+        >
+          
+          <option value="" disabled>Select a department</option>
+          {departmentsList.map((dept) => (
+            <option key={dept.department_id} value={dept.department_name}>
+              {dept.department_name}
+            </option>
+          ))}
+        </select>
+        </div>
+
         <div className="form-group">
           <label>Email</label>
           <input
@@ -83,23 +104,18 @@ const Signup = () => {
             required
           />
         </div>
-        <select
-          className="form-control"
-          value={department}
-          onChange={(e) => setDepartment(e.target.value)}
-          required
-        >
-          <option value="" disabled>Select a department</option>
-          {departmentsList.map((dept) => (
-            <option key={dept.department_id} value={dept.department_name}>
-              {dept.department_name}
-            </option>
-          ))}
-        </select>
 
 
 
-        <button type="submit" className="btn btn-primary">Sign Up</button>
+
+        <div className="text-center">
+          <button type="submit" className="btn btn-primary">Sign Up</button>
+        </div>
+
+        <div className="d-flex justify-content-between align-items-center mt-3">
+            <p className="mb-0" style={{marginLeft:"150px"}}>Have an account?</p>
+            <Link to="/" className="btn">Sign in</Link>
+          </div>
       </form>
     </div>
   );

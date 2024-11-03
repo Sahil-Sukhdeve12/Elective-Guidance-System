@@ -15,19 +15,22 @@ const Login = ({setIsAdmin}) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await doSignInWithEmailAndPassword(email, password);
+      const response = await doSignInWithEmailAndPassword(email, password);
+      const { firstLogin } = response; // Assuming response contains firstLogin flag
+
       if (email === 'minorprojectadmin@gmail.com' && password === '12@Admin12') {
         setIsAdmin(true);
       } else {
         setIsAdmin(false);
       }
-      navigate('/profile');
-       // Redirect to profile page after successful login
 
-      /* in profile page we will show user details  */
-    }
-    catch (error) {
-      setError(error.message);
+      if (firstLogin) {
+        navigate('/category');
+      } else {
+        navigate('/profile');
+      }
+    } catch (error) {
+      setError('Login failed. Please check your email and password.');
     }
   };
 
@@ -60,6 +63,7 @@ const Login = ({setIsAdmin}) => {
             required
           />
         </div>
+        {/* {error && <p>{error}</p>} */}
         <div className="d-flex justify-content-center">
           <button type="submit" className="btn btn-primary w-80">Sign In</button>
         </div>
