@@ -29,8 +29,18 @@ const Login = ({setIsAdmin}) => {
       } else {
         navigate('/profile');
       }
-    } catch (error) {
-      setError('Login failed. Please check your email and password.');
+    } 
+    // catch (error) {
+    //   setError('Login failed. Please check your email and password.');
+    // }
+    catch (err) {
+      if (err.code === 'auth/user-not-found') {
+        setError('User not found. Please check your email and password.');
+      } else if (err.code === 'auth/wrong-password') {
+        setError('Incorrect password. Please try again.');
+      } else {
+        setError('Login failed. Please check your email and password.');
+      }
     }
   };
 
