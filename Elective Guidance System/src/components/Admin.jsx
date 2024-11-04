@@ -1,396 +1,300 @@
 import { useState, useEffect } from 'react';
+import { fetchUserData } from '../firebase/firestoreService';
 import './styling/admin.css'; // Import your CSS styling
+import GraphComponent from './GraphComponent';
 
 const Admin = () => {
-    const [activeSection, setActiveSection] = useState(''); // Keeps track of the current section
-    const [editMode, setEditMode] = useState(false);
-    // Department States
-    const [departmentName, setDepartmentName] = useState('');
-    const [departments, setDepartments] = useState([]);
+    const [users, setUsers] = useState([]);
+    const [filteredUsers, setFilteredUsers] = useState([]);
+    const [filters, setFilters] = useState({
+        degree: '',
+        collegeName: '',
+        department: '',
+        section: '',
+        sem: '',
+        classRollNoRange: { min: '', max: '' },
+    });
 
-    // Category States
-    const [categoryName, setCategoryName] = useState('');
-    const [categories, setCategories] = useState([]);
+    // Unique value states
+    const [uniqueDegrees, setUniqueDegrees] = useState([]);
+    const [uniqueCollegeNames, setUniqueCollegeNames] = useState([]);
+    const [uniqueDepartments, setUniqueDepartments] = useState([]);
+    const [uniqueSections, setUniqueSections] = useState([]);
+    const [uniqueSemesters, setUniqueSemesters] = useState([]);
 
-    // Track States
-    const [trackName, setTrackName] = useState('');
-    const [trackCategoryId, setTrackCategoryId] = useState('');
-    const [selectedDepartments, setSelectedDepartments] = useState([]);
-    const [tracks, setTracks] = useState([]);
-
-    // Elective States
-    const [electiveName, setElectiveName] = useState('');
-    const [courseCode, setCourseCode] = useState('');
-    const [credits, setCredits] = useState('');
-    const [semester, setSemester] = useState('');
-    const [electiveTrackId, setElectiveTrackId] = useState('');
-    const [electives, setElectives] = useState([]);
+    const [Statistics, setStatistics] = useState(null);
 
     // Fetching all entities
     useEffect(() => {
-        fetchDepartments();
-        fetchCategories();
-        fetchTracks();
-        fetchElectives();
+        loadData();
     }, []);
 
-    const handleSectionClick = (section) => {
-        console.log('Clicked section:', section); // Debugging
-        setActiveSection(section);
+    const calculateStatistics = (users) => {
+        const totalUsers = users.length || 0;
+        const semesterCounts = {};
+        const degreeCounts = {};
+        const departmentCounts = {};
+        const sectionCounts = {};
+        const collegeCounts = {};
+
+        users.forEach(user => {
+            semesterCounts[user.sem] = (semesterCounts[user.sem] || 0) + 1;
+            degreeCounts[user.degree] = (degreeCounts[user.degree] || 0) + 1;
+            departmentCounts[user.department] = (departmentCounts[user.department] || 0) + 1;
+            sectionCounts[user.section] = (sectionCounts[user.section] || 0) + 1;
+            collegeCounts[user.collegeName] = (collegeCounts[user.collegeName] || 0) + 1;
+        });
+
+        return {
+            totalUsers,
+            semesterCounts,
+            degreeCounts,
+            departmentCounts,
+            sectionCounts,
+            collegeCounts,
+        };
     };
 
-    const handleEditClick = () => {
-        // Your logic for handling edit
-        setEditMode((prevMode) => !prevMode);
-        console.log("Edit button clicked");
+    const loadData = async () => {
+        const userData = await fetchUserData();
+        console.log(userData); // Log user data
+        setUsers(userData);
+        setFilteredUsers(userData);
+        setStatistics(calculateStatistics(userData));
+
+        // Set unique values
+        setUniqueDegrees(getUniqueValues(userData, 'degree'));
+        setUniqueCollegeNames(getUniqueValues(userData, 'collegeName'));
+        setUniqueDepartments(getUniqueValues(userData, 'department'));
+        setUniqueSections(getUniqueValues(userData, 'section'));
+        setUniqueSemesters(getUniqueValues(userData, 'sem'));
     };
 
-    // Toggle between sections
-    const renderSection = () => {
-        switch (activeSection) {
-            case 'Department':
-                return renderDepartments();
-            case 'Category':
-                return renderCategories();
-            case 'Track':
-                return renderTracks();
-            case 'Elective':
-                return renderElectives();
-            default:
-                return null;
+    const getUniqueValues = (data, key) => {
+        const uniqueValues = [...new Set(data.map(user => user[key]))];
+        return uniqueValues.filter(value => value); // Filter out any undefined values
+    };
+
+    const applyFilters = () => {
+        let filtered = users;
+
+        // Apply filters
+        if (filters.degree) {
+            filtered = filtered.filter(user => user.degree.toLowerCase().includes(filters.degree.toLowerCase()));
         }
+        if (filters.collegeName) {
+            filtered = filtered.filter(user => user.collegeName.toLowerCase().includes(filters.collegeName.toLowerCase()));
+        }
+        if (filters.department) {
+            filtered = filtered.filter(user => user.department.toLowerCase().includes(filters.department.toLowerCase()));
+        }
+        if (filters.section) {
+            filtered = filtered.filter(user => user.section.toLowerCase().includes(filters.section.toLowerCase()));
+        }
+        if (filters.sem) {
+            filtered = filtered.filter(user => user.sem.toLowerCase().includes(filters.sem.toLowerCase()));
+        }
+        if (filters.classRollNoRange.min) {
+            filtered = filtered.filter(user => user.classRollNo >= filters.classRollNoRange.min);
+        }
+        if (filters.classRollNoRange.max) {
+            filtered = filtered.filter(user => user.classRollNo <= filters.classRollNoRange.max);
+        }
+
+        setFilteredUsers(filtered);
     };
 
-    // ------------------- CRUD Operations for Departments -------------------
-    const fetchDepartments = async () => {
-        const response = await fetch('http://localhost:5000/departments');
-        const data = await response.json();
-        setDepartments(data);
-    };
+    const downloadCSV = (data) => {
+        const csvRows = [];
+        // Get the headers
+        const headers = [
+            "Name",
+            "Enrollment No",
+            "Semester",
+            "Degree",
+            "College Name",
+            "Department",
+            "Section",
+            "Class Roll No",
+            "Email"
+        ];
+        csvRows.push(headers.join(','));
 
-    const createDepartment = async () => {
-        await fetch('http://localhost:5000/departments', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ department_name: departmentName }),
+        // Format the data into rows
+        data.forEach(user => {
+            const row = [
+                user.name,
+                user.enrollmentNo,
+                user.sem,
+                user.degree,
+                user.collegeName,
+                user.department,
+                user.section,
+                user.classRollNo,
+                user.email
+            ];
+            csvRows.push(row.join(','));
         });
-        setDepartmentName(''); // Reset input
-        fetchDepartments(); // Refresh the list
+
+        // Create a Blob from the CSV string
+        const csvString = csvRows.join('\n');
+        const blob = new Blob([csvString], { type: 'text/csv' });
+        const url = URL.createObjectURL(blob);
+
+        // Create a link to download the file
+        const link = document.createElement('a');
+        link.setAttribute('href', url);
+        link.setAttribute('download', 'filtered_users.csv');
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
     };
 
-    const updateDepartment = async (id) => {
-        const newName = prompt('New Department Name:');
-        await fetch(`http://localhost:5000/departments/${id}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ department_name: newName }),
-        });
-        fetchDepartments();
-    };
-
-    const deleteDepartment = async (id) => {
-        await fetch(`http://localhost:5000/departments/${id}`, { method: 'DELETE' });
-        fetchDepartments();
-    };
-
-    const renderDepartments = () => (
-        <div className="crud-container">
-            <input
-                type="text"
-                value={departmentName}
-                onChange={(e) => setDepartmentName(e.target.value)}
-                placeholder="Department Name"
-            />
-            <button className="crud-btn" onClick={createDepartment}>Create Department</button>
-            <ul>
-                {departments.map(dep => (
-                    <li key={dep.department_id}>
-                        {dep.department_name}
-                        <button onClick={() => updateDepartment(dep.department_id)}>Update</button>
-                        <button onClick={() => deleteDepartment(dep.department_id)}>Delete</button>
-                    </li>
-                ))}
-            </ul>
-        </div>
-    );
-
-    // ------------------- CRUD Operations for Categories -------------------
-    const fetchCategories = async () => {
-        const response = await fetch('http://localhost:5000/categories');
-        const data = await response.json();
-        setCategories(data);
-    };
-
-    const createCategory = async () => {
-        await fetch('http://localhost:5000/domain_Category', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ category_name: categoryName }),
-        });
-        setCategoryName(''); // Reset input
-        fetchCategories();
-    };
-
-    const updateCategory = async (id) => {
-        const newName = prompt('New Category Name:');
-        await fetch(`http://localhost:5000/domain_Category/${id}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ category_name: newName }),
-        });
-        fetchCategories();
-    };
-
-    const deleteCategory = async (id) => {
-        await fetch(`http://localhost:5000/domain_Category/${id}`, { method: 'DELETE' });
-        fetchCategories();
-    };
-
-    const renderCategories = () => (
-        <div className="crud-container">
-            <input
-                type="text"
-                value={categoryName}
-                onChange={(e) => setCategoryName(e.target.value)}
-                placeholder="Category Name"
-            />
-            <button className="crud-btn" onClick={createCategory}>Create Category</button>
-            <ul>
-                {categories.map(cat => (
-                    <li key={cat.category_id}>
-                        {cat.category_name}
-                        <button onClick={() => updateCategory(cat.category_id)}>Update</button>
-                        <button onClick={() => deleteCategory(cat.category_id)}>Delete</button>
-                    </li>
-                ))}
-            </ul>
-        </div>
-    );
-
-    // ------------------- CRUD Operations for Tracks -------------------
-    const fetchTracks = async () => {
-        const response = await fetch('http://localhost:5000/tracks');
-        const data = await response.json();
-        setTracks(data);
-    };
-
-    const createTrack = async () => {
-        const response = await fetch('http://localhost:5000/tracks', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ Track_Name: trackName, category_id: trackCategoryId }),
-        });
-        const newTrack = await response.json();
-
-        // Create entries in track_department for selected departments
-        await Promise.all(
-            selectedDepartments.map(department_id =>
-                fetch('http://localhost:5000/track_department', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ track_id: newTrack.Track_id, department_id }),
-                })
-            )
-        );
-        setTrackName(''); // Reset input
-        fetchTracks(); // Refresh the list
-    };
-
-    const updateTrack = async (id) => {
-        const newName = prompt('New Track Name:');
-        const newCategoryId = prompt('New Category ID:');
-        await fetch(`http://localhost:5000/tracks/${id}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ Track_Name: newName, category_id: newCategoryId }),
-        });
-        fetchTracks();
-    };
-
-    const deleteTrack = async (id) => {
-        await fetch(`http://localhost:5000/tracks/${id}`, { method: 'DELETE' });
-        fetchTracks();
-    };
-
-    const renderTracks = () => (
-        <div className="crud-container">
-            <input
-                type="text"
-                value={trackName}
-                onChange={(e) => setTrackName(e.target.value)}
-                placeholder="Track Name"
-            />
-            <select value={trackCategoryId} onChange={(e) => setTrackCategoryId(e.target.value)}>
-                <option value="">Select Category</option>
-                {categories.map(cat => (
-                    <option key={cat.category_id} value={cat.category_id}>
-                        {cat.category_name}
-                    </option>
-                ))}
-            </select>
-            <select multiple value={selectedDepartments} onChange={(e) => setSelectedDepartments(Array.from(e.target.selectedOptions, option => option.value))}>
-                {departments.map(dep => (
-                    <option key={dep.department_id} value={dep.department_id}>
-                        {dep.department_name}
-                    </option>
-                ))}
-            </select>
-            <button className="crud-btn" onClick={createTrack}>Create Track</button>
-            <ul>
-                {tracks.map(track => (
-                    <li key={track.Track_id}>
-                        {track.Track_Name}
-                        <button onClick={() => updateTrack(track.Track_id)}>Update</button>
-                        <button onClick={() => deleteTrack(track.Track_id)}>Delete</button>
-                    </li>
-                ))}
-            </ul>
-        </div>
-    );
-
-    // ------------------- CRUD Operations for Electives -------------------
-    const fetchElectives = async () => {
-        const response = await fetch('http://localhost:5000/electives?track_id=1'); // Replace with actual track ID
-        const data = await response.json();
-        setElectives(data);
-    };
-
-    const createElective = async () => {
-        await fetch('http://localhost:5000/electives', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                Elective_Name: electiveName,
-                Course_Code: courseCode,
-                Credits: credits,
-                Semester: semester,
-                Track_id: electiveTrackId,
-            }),
-        });
-        setElectiveName(''); // Reset input
-        fetchElectives(); // Refresh the list
-    };
-
-    const updateElective = async (id) => {
-        const newName = prompt('New Elective Name:');
-        const newCourseCode = prompt('New Course Code:');
-        const newCredits = prompt('New Credits:');
-        const newSemester = prompt('New Semester:');
-        await fetch(`http://localhost:5000/electives/${id}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ Elective_Name: newName, Course_Code: newCourseCode, Credits: newCredits, Semester: newSemester }),
-        });
-        fetchElectives();
-    };
-
-    const deleteElective = async (id) => {
-        await fetch(`http://localhost:5000/electives/${id}`, { method: 'DELETE' });
-        fetchElectives();
-    };
-
-    const renderElectives = () => (
-        <div className="crud-container">
-            <input
-                type="text"
-                value={electiveName}
-                onChange={(e) => setElectiveName(e.target.value)}
-                placeholder="Elective Name"
-            />
-            <input
-                type="text"
-                value={courseCode}
-                onChange={(e) => setCourseCode(e.target.value)}
-                placeholder="Course Code"
-            />
-            <input
-                type="number"
-                value={credits}
-                onChange={(e) => setCredits(e.target.value)}
-                placeholder="Credits"
-            />
-            <input
-                type="text"
-                value={semester}
-                onChange={(e) => setSemester(e.target.value)}
-                placeholder="Semester"
-            />
-            <select value={electiveTrackId} onChange={(e) => setElectiveTrackId(e.target.value)}>
-                <option value="">Select Track</option>
-                {tracks.map(track => (
-                    <option key={track.Track_id} value={track.Track_id}>
-                        {track.Track_Name}
-                    </option>
-                ))}
-            </select>
-            <button className="crud-btn" onClick={createElective}>Create Elective</button>
-            <ul>
-                {electives.map(elective => (
-                    <li key={elective.Elective_id}>
-                        {elective.Elective_Name}
-                        <button onClick={() => updateElective(elective.Elective_id)}>Update</button>
-                        <button onClick={() => deleteElective(elective.Elective_id)}>Delete</button>
-                    </li>
-                ))}
-            </ul>
-        </div>
-    );
 
     return (
-        <div className="admin-container">
-            {/* Header Section */}
-            <div className="admin-header">
-                <h1>Admin Panel</h1>
-            </div>
-
-            {/* Stats Section */}
-            <div className="admin-stats">
-                <h2>Statistics Overview</h2>
-                {/* Add your stats content here */}
-            </div>
-            {/* Footer Download Button */}
-            <div className="admin-footer">
-                <button className="btn-download">Download Data</button>
-            </div>
-            {/* Options Container */}
-            <div className="option-container">
-                <div className="container-1">
-                    <div className="filter-section">
-                        <h3>Filter Options</h3>
-                        {/* Add filter options/components here */}
-                    </div>
-                    <div className="student-data">
-                        <h3>Student Data</h3>
-                        {/* Add student data table/component here */}
-                    </div>
-                </div>
-
-                {/* Edit Options Container */}
-                <div className="edit-options">
-                    <button className="btn-primary" onClick={handleEditClick}>
-                        {editMode ? 'Cancel' : 'Edit Data'}
-                    </button>
-
-                    {editMode && (
-                        <>
-                            <button className="btn-secondary" onClick={() => handleSectionClick('Departments')}>Manage Departments</button>
-                            <button className="btn-secondary" onClick={() => handleSectionClick('Category')}>Manage Categories</button>
-                            <button className="btn-secondary" onClick={() => handleSectionClick('Track')}>Manage Tracks</button>
-                            <button className="btn-secondary" onClick={() => handleSectionClick('Elective')}>Manage Electives</button>
-                            {renderSection()}
-                            {/* CRUD Container 
-                            <div className="crud-container">
-                                <button className="crud-btn">Add</button>
-                                <button className="crud-btn">Update</button>
-                                <button className="crud-btn">Delete</button>
-                            </div>
-                            */}
-                        </>
+        <div className="admin-body">
+            <div className="admin-container">
+                {/* Stats Section */}
+                <div className="admin-stats">
+                    <h2>Statistics</h2>
+                    {Statistics ? (
+                        <GraphComponent statistics={Statistics} />
+                    ) : (
+                        <div>Loading statistics...</div>
                     )}
                 </div>
+                {/* Options Container */}
+                <div className="option-container">
+                    <div className="container-1">
+                        <div className="filter-section">
+                            <label>
+                                Degree:
+                                <select
+                                    value={filters.degree}
+                                    onChange={(e) => setFilters({ ...filters, degree: e.target.value })}
+                                >
+                                    <option value="">All</option>
+                                    {uniqueDegrees.map((degree, index) => (
+                                        <option key={index} value={degree}>{degree}</option>
+                                    ))}
+                                </select>
+                            </label>
+
+                            <label>
+                                College Name:
+                                <select
+                                    value={filters.collegeName}
+                                    onChange={(e) => setFilters({ ...filters, collegeName: e.target.value })}
+                                >
+                                    <option value="">All</option>
+                                    {uniqueCollegeNames.map((college, index) => (
+                                        <option key={index} value={college}>{college}</option>
+                                    ))}
+                                </select>
+                            </label>
+
+                            <label>
+                                Department:
+                                <select
+                                    value={filters.department}
+                                    onChange={(e) => setFilters({ ...filters, department: e.target.value })}
+                                >
+                                    <option value="">All</option>
+                                    {uniqueDepartments.map((department, index) => (
+                                        <option key={index} value={department}>{department}</option>
+                                    ))}
+                                </select>
+                            </label>
+
+                            <label>
+                                Section:
+                                <select
+                                    value={filters.section}
+                                    onChange={(e) => setFilters({ ...filters, section: e.target.value })}
+                                >
+                                    <option value="">All</option>
+                                    {uniqueSections.map((section, index) => (
+                                        <option key={index} value={section}>{section}</option>
+                                    ))}
+                                </select>
+                            </label>
+
+                            <label>
+                                Semester:
+                                <select
+                                    value={filters.sem}
+                                    onChange={(e) => setFilters({ ...filters, sem: e.target.value })}
+                                >
+                                    <option value="">All</option>
+                                    {uniqueSemesters.map((semester, index) => (
+                                        <option key={index} value={semester}>{semester}</option>
+                                    ))}
+                                </select>
+                            </label>
+
+                            <label>
+                                Class Roll No Range:
+                                <input
+                                    type="number"
+                                    placeholder="Min"
+                                    value={filters.classRollNoRange.min}
+                                    onChange={(e) => setFilters({ ...filters, classRollNoRange: { ...filters.classRollNoRange, min: e.target.value } })}
+                                />
+                                <input
+                                    type="number"
+                                    placeholder="Max"
+                                    value={filters.classRollNoRange.max}
+                                    onChange={(e) => setFilters({ ...filters, classRollNoRange: { ...filters.classRollNoRange, max: e.target.value } })}
+                                />
+                            </label>
+
+                            <button onClick={applyFilters}>Apply Filters</button>
+                        </div>
+
+                        <div className="student-data">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Enrollment No</th>
+                                        <th>Semester</th>
+                                        <th>Degree</th>
+                                        <th>College Name</th>
+                                        <th>Department</th>
+                                        <th>Section</th>
+                                        <th>Class Roll No</th>
+                                        <th>Email</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {filteredUsers.length === 0 ? (
+                                        <tr>
+                                            <td colSpan="9" style={{ textAlign: "center" }}>No users found</td>
+                                        </tr>
+                                    ) : (
+                                        filteredUsers.map((user, index) => (
+                                            <tr key={index}>
+                                                <td>{user.name}</td>
+                                                <td>{user.enrollmentNo}</td>
+                                                <td>{user.sem}</td>
+                                                <td>{user.degree}</td>
+                                                <td>{user.collegeName}</td>
+                                                <td>{user.department}</td>
+                                                <td>{user.section}</td>
+                                                <td>{user.classRollNo}</td>
+                                                <td>{user.email}</td>
+                                            </tr>
+                                        ))
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <button onClick={() => downloadCSV(filteredUsers)}>Download CSV</button>
+                    <button onClick={() => {}}>Edit Electives</button>
+                </div>
             </div>
-
-
+           
         </div>
     );
 };
