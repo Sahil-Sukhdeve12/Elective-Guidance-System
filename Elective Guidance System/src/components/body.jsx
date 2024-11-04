@@ -25,7 +25,7 @@ const Body=()=>{
             element:<Signup/>
         },
         {
-            path:"/domain",
+            path:"/domain/:categoryId",
             element:<Domain/>
         },
         {

@@ -8,15 +8,15 @@ import Error from './components/Error';
 import Header from './components/header';
 import Profile from './components/profile';
 import UserForm from './components/userForm';
-import { db } from './firebase/firebaseConfig';
 import Category from './components/category';
 import Domain from './components/domain';
 import Admin from './components/Admin';
 import Subject from './components/subject';
+import { UserProvider } from './contexts/userContext/UserContext.jsx'; // Ensure you import UserProvider
 
 const Layout = ({ isAdmin, setIsAdmin }) => {
   const location = useLocation();
-  const showHeader = location.pathname !== '/' && location.pathname !== '/signup' && location.pathname !== '/forgotPassword';
+  const showHeader = !['/', '/signup', '/forgotPassword'].includes(location.pathname);
 
   return (
     <>
@@ -25,11 +25,10 @@ const Layout = ({ isAdmin, setIsAdmin }) => {
         <Route path="/" element={<Login setIsAdmin={setIsAdmin} />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/forgotPassword" element={<ForgotPassword />} />
-        <Route path="/profile" element={<Profile userId='someUserId'/>} />
+        <Route path="/profile" element={<Profile userId='someUserId' />} />
         <Route path="/category" element={<Category />} />
-        {/* <Route path="/domain/:categoryId" element={<Domain />} /> */}
-        <Route path="/domain" element={<Domain />} />
-        <Route path='/admin' element={<Admin/>}/>
+        <Route path="/domain/:categoryId" element={<Domain />} />
+        <Route path="/admin" element={<Admin />} />
         <Route path="*" element={<Error />} />
         <Route path="/subject" element={<Subject />} />
       </Routes>
@@ -45,12 +44,11 @@ Layout.propTypes = {
 
 const App = () => {
   const [isAdmin, setIsAdmin] = useState(false);
-  const [tracks, setTracks] = useState('');
 
   // For submission form
   const handleFormSubmit = async (userInfo) => {
     try {
-      await db.collection('users').add(userInfo);
+      await db.collection('users').add(userInfo); // Assuming db is Firestore instance
       alert('Information saved successfully!');
     } catch (error) {
       console.error('Error saving information: ', error);
@@ -58,10 +56,12 @@ const App = () => {
   };
 
   return (
-    <Router>
-      <Layout isAdmin={isAdmin} setIsAdmin={setIsAdmin} />
-      <UserForm onSubmit={handleFormSubmit} />
-    </Router>
+    <UserProvider>
+      <Router>
+        <Layout isAdmin={isAdmin} setIsAdmin={setIsAdmin} />
+        <UserForm onSubmit={handleFormSubmit} />
+      </Router>
+    </UserProvider>
   );
 };
 
