@@ -265,7 +265,6 @@ app.get('/electives', async (req, res) => {
         res.status(500).send('Server error');
     }
 });
-
 // Add a new elective
 app.post('/electives', async (req, res) => {
     const { Elective_Name, Course_Code, Credits, Semester, Track_id } = req.body;
@@ -278,6 +277,46 @@ app.post('/electives', async (req, res) => {
         res.status(500).send('Server error');
     }
 });
+
+// Update an elective
+app.put('/electives/:id', async (req, res) => {
+    const { id } = req.params;
+    const { Elective_Name, Course_Code, Credits, Semester, Track_id } = req.body;
+    const query = 'UPDATE electives SET Elective_Name = ?, Course_Code = ?, Credits = ?, Semester = ?, Track_id = ? WHERE Elective_Number = ?';
+    try {
+        await db.query(query, [Elective_Name, Course_Code, Credits, Semester, Track_id, id]);
+        res.status(200).send('Elective updated successfully');
+    } catch (err) {
+        console.error('Error updating elective:', err);
+        res.status(500).send('Server error');
+    }
+});
+
+// Delete an elective
+app.delete('/electives/:id', async (req, res) => {
+    const { id } = req.params;
+    const query = 'DELETE FROM electives WHERE Elective_Number = ?';
+    try {
+        await db.query(query, [id]);
+        res.status(200).send('Elective deleted successfully');
+    } catch (err) {
+        console.error('Error deleting elective:', err);
+        res.status(500).send('Server error');
+    }
+});
+// Get electives for a specific track
+app.get('/electives/track/:track_id', async (req, res) => {
+    const { track_id } = req.params;
+    const query = 'SELECT * FROM electives WHERE Track_id = ?';
+    try {
+        const result = await db.query(query, [track_id]);
+        res.json(result);
+    } catch (err) {
+        console.error('Error fetching electives:', err);
+        res.status(500).send('Server error');
+    }
+});
+
 
 // Start server
 app.listen(port, () => {
