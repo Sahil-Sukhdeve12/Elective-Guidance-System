@@ -56,33 +56,31 @@ app.get('/departments', async (req, res) => {
         console.error('Error fetching departments:', err);
         res.status(500).send('Server error');
     } finally {
-        // Close the connection if necessary
         await connection.end();
     }
 });
 
-
-// Create a department
+// Add a new department
 app.post('/departments', async (req, res) => {
     const { department_name } = req.body;
     const query = 'INSERT INTO departments (department_name) VALUES (?)';
     try {
         await db.query(query, [department_name]);
-        res.status(201).send('Department created successfully');
+        res.status(201).send('Department added successfully');
     } catch (err) {
-        console.error('Error creating department:', err);
+        console.error('Error adding department:', err);
         res.status(500).send('Server error');
     }
 });
 
 // Update a department
 app.put('/departments/:id', async (req, res) => {
-    const { id } = req.params;
+    const departmentId = req.params.id;
     const { department_name } = req.body;
     const query = 'UPDATE departments SET department_name = ? WHERE department_id = ?';
     try {
-        await db.query(query, [department_name, id]);
-        res.send('Department updated successfully');
+        await db.query(query, [department_name, departmentId]);
+        res.status(200).send('Department updated successfully');
     } catch (err) {
         console.error('Error updating department:', err);
         res.status(500).send('Server error');
@@ -91,11 +89,11 @@ app.put('/departments/:id', async (req, res) => {
 
 // Delete a department
 app.delete('/departments/:id', async (req, res) => {
-    const { id } = req.params;
+    const departmentId = req.params.id;
     const query = 'DELETE FROM departments WHERE department_id = ?';
     try {
-        await db.query(query, [id]);
-        res.send('Department deleted successfully');
+        await db.query(query, [departmentId]);
+        res.status(200).send('Department deleted successfully');
     } catch (err) {
         console.error('Error deleting department:', err);
         res.status(500).send('Server error');
@@ -117,27 +115,27 @@ app.get('/categories', async (req, res) => {
     }
 });
 
-// Create a category
-app.post('/domain_Category', async (req, res) => {
+// Add a new category
+app.post('/categories', async (req, res) => {
     const { category_name } = req.body;
     const query = 'INSERT INTO domain_Category (category_name) VALUES (?)';
     try {
         await db.query(query, [category_name]);
-        res.status(201).send('Category created successfully');
+        res.status(201).send('Category added successfully');
     } catch (err) {
-        console.error('Error creating category:', err);
+        console.error('Error adding category:', err);
         res.status(500).send('Server error');
     }
 });
 
 // Update a category
-app.put('/domain_Category/:id', async (req, res) => {
-    const { id } = req.params;
+app.put('/categories/:id', async (req, res) => {
+    const categoryId = req.params.id;
     const { category_name } = req.body;
     const query = 'UPDATE domain_Category SET category_name = ? WHERE category_id = ?';
     try {
-        await db.query(query, [category_name, id]);
-        res.send('Category updated successfully');
+        await db.query(query, [category_name, categoryId]);
+        res.status(200).send('Category updated successfully');
     } catch (err) {
         console.error('Error updating category:', err);
         res.status(500).send('Server error');
@@ -145,12 +143,12 @@ app.put('/domain_Category/:id', async (req, res) => {
 });
 
 // Delete a category
-app.delete('/domain_Category/:id', async (req, res) => {
-    const { id } = req.params;
+app.delete('/categories/:id', async (req, res) => {
+    const categoryId = req.params.id;
     const query = 'DELETE FROM domain_Category WHERE category_id = ?';
     try {
-        await db.query(query, [id]);
-        res.send('Category deleted successfully');
+        await db.query(query, [categoryId]);
+        res.status(200).send('Category deleted successfully');
     } catch (err) {
         console.error('Error deleting category:', err);
         res.status(500).send('Server error');
@@ -172,7 +170,6 @@ app.get('/tracks', async (req, res) => {
     }
 });
 
-
 // Endpoint to get track IDs for a specific department
 app.get('/track_department', async (req, res) => {
     const departmentId = req.query.department_id; // Get department_id from query parameters
@@ -183,11 +180,10 @@ app.get('/track_department', async (req, res) => {
     }
 
     try {
-        // Query to get track IDs associated with the specified department
         const [results] = await connection.execute(`
             SELECT Track_id 
             FROM track_department 
-            WHERE department_id = ?`, 
+            WHERE department_id = ?`,
             [departmentId]
         );
 
@@ -196,56 +192,56 @@ app.get('/track_department', async (req, res) => {
         console.error('Error fetching track department associations:', err);
         res.status(500).send('Server error');
     } finally {
-        // Close the connection if necessary
         await connection.end();
     }
 });
 
-// Create a track and add to departments
+// Add a new track (using raw SQL)
 app.post('/tracks', async (req, res) => {
-    const { Track_Name, category_id, departments } = req.body;
-    const query = 'INSERT INTO tracks (Track_Name, category_id) VALUES (?, ?)';
-    try {
-        const [result] = await db.query(query, [Track_Name, category_id]);
-        const track_id = result.insertId;
+    console.log("Received data:", req.body);
 
-        // Insert into track_department for each department
-        const departmentQueries = departments.map(department_id =>
-            db.query('INSERT INTO track_department (track_id, department_id) VALUES (?, ?)', [track_id, department_id])
+    try {
+        const { Track_Name, category_id, selectedDepartments } = req.body;
+
+        // Validate input
+        if (!Track_Name || !category_id || !selectedDepartments) {
+            return res.status(400).json({ message: 'Missing required fields' });
+        }
+
+        // Insert the new track into the 'tracks' table
+        const [result] = await db.query(
+            'INSERT INTO tracks (Track_Name, category_id) VALUES (?, ?)', 
+            [Track_Name, category_id]
         );
 
-        await Promise.all(departmentQueries);
-        res.status(201).send('Track and associated departments created successfully');
+        // Send the newly created track ID as part of the response
+        res.status(201).json({
+            track_id: result.insertId // The auto-generated primary key (ID) of the new track
+        });
     } catch (err) {
-        console.error('Error associating track with departments:', err);
-        res.status(500).send('Server error while associating track with departments');
+        console.error('Error adding track:', err);
+        res.status(500).json({ message: 'Internal Server Error', error: err.message });
     }
 });
 
-// Update a track
-app.put('/tracks/:id', async (req, res) => {
-    const { id } = req.params;
-    const { Track_Name, category_id } = req.body;
-    const query = 'UPDATE tracks SET Track_Name = ?, category_id = ? WHERE Track_id = ?';
+// Associate a track with departments (using raw SQL)
+app.post('/track_department', async (req, res) => {
     try {
-        await db.query(query, [Track_Name, category_id, id]);
-        res.send('Track updated successfully');
-    } catch (err) {
-        console.error('Error updating track:', err);
-        res.status(500).send('Server error');
-    }
-});
+        const { track_id, department_id } = req.body;
 
-// Delete a track
-app.delete('/tracks/:id', async (req, res) => {
-    const { id } = req.params;
-    const query = 'DELETE FROM tracks WHERE Track_id = ?';
-    try {
-        await db.query(query, [id]);
-        res.send('Track deleted successfully');
+        // Ensure the provided track_id and department_id are valid
+        if (!track_id || !department_id) {
+            return res.status(400).json({ message: 'Track ID and Department ID are required' });
+        }
+
+        // Insert into the 'track_department' table
+        const query = 'INSERT INTO track_department (track_id, department_id) VALUES (?, ?)';
+        await db.query(query, [track_id, department_id]);
+
+        res.status(200).json({ message: 'Department added to track successfully' });
     } catch (err) {
-        console.error('Error deleting track:', err);
-        res.status(500).send('Server error');
+        console.error('Error associating department with track:', err);
+        res.status(500).json({ message: 'Internal Server Error', error: err.message });
     }
 });
 
@@ -270,42 +266,15 @@ app.get('/electives', async (req, res) => {
     }
 });
 
-// Create an elective
+// Add a new elective
 app.post('/electives', async (req, res) => {
     const { Elective_Name, Course_Code, Credits, Semester, Track_id } = req.body;
     const query = 'INSERT INTO electives (Elective_Name, Course_Code, Credits, Semester, Track_id) VALUES (?, ?, ?, ?, ?)';
     try {
         await db.query(query, [Elective_Name, Course_Code, Credits, Semester, Track_id]);
-        res.status(201).send('Elective created successfully');
+        res.status(201).send('Elective added successfully');
     } catch (err) {
-        console.error('Error creating elective:', err);
-        res.status(500).send('Server error');
-    }
-});
-
-// Update an elective
-app.put('/electives/:courseCode', async (req, res) => {
-    const { courseCode } = req.params;
-    const { Elective_Name, Credits } = req.body;
-    const query = 'UPDATE electives SET Elective_Name = ?, Credits = ? WHERE Course_Code = ?';
-    try {
-        await db.query(query, [Elective_Name, Credits, courseCode]);
-        res.send('Elective updated successfully');
-    } catch (err) {
-        console.error('Error updating elective:', err);
-        res.status(500).send('Server error');
-    }
-});
-
-// Delete an elective
-app.delete('/electives/:courseCode', async (req, res) => {
-    const { courseCode } = req.params;
-    const query = 'DELETE FROM electives WHERE Course_Code = ?';
-    try {
-        await db.query(query, [courseCode]);
-        res.send('Elective deleted successfully');
-    } catch (err) {
-        console.error('Error deleting elective:', err);
+        console.error('Error adding elective:', err);
         res.status(500).send('Server error');
     }
 });
@@ -314,4 +283,3 @@ app.delete('/electives/:courseCode', async (req, res) => {
 app.listen(port, () => {
     console.log(`Server running on http://localhost:${port}`);
 });
-

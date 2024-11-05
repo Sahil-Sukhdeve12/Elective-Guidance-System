@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { fetchUserData } from '../firebase/firestoreService';
 import './styling/admin.css'; // Import your CSS styling
 import GraphComponent from './GraphComponent';
+import EditModal from './edit';
 
 const Admin = () => {
     const [users, setUsers] = useState([]);
@@ -23,6 +24,9 @@ const Admin = () => {
     const [uniqueSemesters, setUniqueSemesters] = useState([]);
 
     const [Statistics, setStatistics] = useState(null);
+
+    const [isModalOpen, setIsModalOpen] = useState(false); // Track if the modal is open
+  const [modalType, setModalType] = useState("");
 
     // Fetching all entities
     useEffect(() => {
@@ -150,7 +154,19 @@ const Admin = () => {
         document.body.removeChild(link);
     };
 
-
+    const handleEditClick = () => {
+        setIsModalOpen(true); // Open the modal when a button is clicked
+      };
+    
+      const handleCloseModal = () => {
+        setIsModalOpen(false); // Close the modal when "Close" is clicked
+      };
+    
+      const handleSaveData = () => {
+        // Add your save logic here
+        console.log(`${modalType} data saved!`);
+        setIsModalOpen(false); // Close the modal after saving
+      };
     return (
         <div className="admin-body">
             <div className="admin-container">
@@ -291,10 +307,19 @@ const Admin = () => {
                         </div>
                     </div>
                     <button onClick={() => downloadCSV(filteredUsers)}>Download CSV</button>
-                    <button onClick={() => {}}>Edit Electives</button>
+                    <button onClick={handleEditClick}>Edit Data</button>
+                    {/* Pass state and functions to the EditModal */}
+                    <EditModal
+                        isOpen={isModalOpen}
+                        onClose={handleCloseModal}
+                        onSave={handleSaveData}
+                        modalType={modalType}
+                        setModalType={setModalType}
+                    />
+
                 </div>
             </div>
-           
+
         </div>
     );
 };
