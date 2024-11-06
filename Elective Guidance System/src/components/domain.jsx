@@ -91,8 +91,11 @@ const Domain = () => {
     }, [categoryId, userDepartment]);
 
     const handleSelect = () => {
-        navigate(`/electives/${selectedTrack}`);
-    };
+        console.log('Navigating to:', `/electives/${selectedTrack}`);
+        if (selectedTrack) {
+            navigate(`/electives/${selectedTrack}`);
+        }
+    };    
 
     return (
         <div className="d-flex justify-content-center align-items-center vh-75">
@@ -105,7 +108,8 @@ const Domain = () => {
                             {track.Track_Name}
                         </option>
                     ))}
-                </select>
+                </select> 
+                
                 <button onClick={handleSelect} disabled={!selectedTrack} className="btn btn-primary">
                     Go to Electives
                 </button>
