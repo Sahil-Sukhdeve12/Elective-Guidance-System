@@ -16,26 +16,8 @@ const dbConfig = {
     database: 'minor_project',
 };
 
-// Initialize MySQL connection
-const initializeDatabase = async () => {
-    try {
-        const connection = await mysql.createConnection(dbConfig);
-        console.log('Connected to MySQL Database!');
-        return connection;
-    } catch (err) {
-        console.error('Database connection failed:', err);
-        process.exit(1); // Exit if DB connection fails
-    }
-};
-
-// Create a global database connection
-let db;
-
-const init = async () => {
-    db = await initializeDatabase();
-};
-
-init(); // Initialize the database connection
+// Create a pool of connections with Promise-based API
+const db = mysql.createPool(dbConfig); // Create the pool and it will return promises
 
 // Test route
 app.get('/', (req, res) => {
@@ -48,15 +30,12 @@ app.get('/', (req, res) => {
 
 // Get all departments
 app.get('/departments', async (req, res) => {
-    const connection = await initializeDatabase(); // Ensure you have a connection
     try {
-        const [results] = await connection.execute('SELECT * FROM departments');
+        const [results] = await db.query('SELECT * FROM departments');
         res.json(results); // Send the results as JSON
     } catch (err) {
         console.error('Error fetching departments:', err);
         res.status(500).send('Server error');
-    } finally {
-        await connection.end();
     }
 });
 
@@ -170,33 +149,45 @@ app.get('/tracks', async (req, res) => {
     }
 });
 
+// Get tracks for a specific categoryId
+app.get('/tracks/:categoryId', async (req, res) => {
+    const { categoryId } = req.params; // Get categoryId from the route params
+
+    try {
+        // Query to get tracks that belong to the given categoryId
+        const [results] = await db.query(
+            'SELECT * FROM tracks WHERE category_id = ?',
+            [categoryId]
+        );
+        res.json(results); // Send the results as JSON
+    } catch (err) {
+        console.error(`Error fetching tracks for categoryId ${categoryId}:`, err);
+        res.status(500).send('Server error');
+    }
+});
+
 // Endpoint to get track IDs for a specific department
 app.get('/track_department', async (req, res) => {
     const departmentId = req.query.department_id; // Get department_id from query parameters
-    const connection = await initializeDatabase(); // Ensure you have a connection
 
     if (!departmentId) {
         return res.status(400).send('Department ID is required');
     }
 
     try {
-        const [results] = await connection.execute(`
-            SELECT Track_id 
-            FROM track_department 
-            WHERE department_id = ?`,
+        // Query to fetch track IDs for the given department_id
+        const [results] = await db.query(
+            'SELECT Track_id FROM track_department WHERE department_id = ?',
             [departmentId]
         );
-
-        res.json(results); // Send the results as JSON
+        res.json(results); // Send the track IDs as JSON
     } catch (err) {
         console.error('Error fetching track department associations:', err);
         res.status(500).send('Server error');
-    } finally {
-        await connection.end();
     }
 });
 
-// Add a new track (using raw SQL)
+// Add a new track
 app.post('/tracks', async (req, res) => {
     console.log("Received data:", req.body);
 
@@ -210,7 +201,7 @@ app.post('/tracks', async (req, res) => {
 
         // Insert the new track into the 'tracks' table
         const [result] = await db.query(
-            'INSERT INTO tracks (Track_Name, category_id) VALUES (?, ?)', 
+            'INSERT INTO tracks (Track_Name, category_id) VALUES (?, ?)',
             [Track_Name, category_id]
         );
 
@@ -224,7 +215,7 @@ app.post('/tracks', async (req, res) => {
     }
 });
 
-// Associate a track with departments (using raw SQL)
+// Associate a track with departments
 app.post('/track_department', async (req, res) => {
     try {
         const { track_id, department_id } = req.body;
@@ -265,6 +256,7 @@ app.get('/electives', async (req, res) => {
         res.status(500).send('Server error');
     }
 });
+
 // Add a new elective
 app.post('/electives', async (req, res) => {
     const { Elective_Name, Course_Code, Credits, Semester, Track_id } = req.body;
@@ -304,19 +296,19 @@ app.delete('/electives/:id', async (req, res) => {
         res.status(500).send('Server error');
     }
 });
+
 // Get electives for a specific track
 app.get('/electives/track/:track_id', async (req, res) => {
     const { track_id } = req.params;
     const query = 'SELECT * FROM electives WHERE Track_id = ?';
     try {
-        const result = await db.query(query, [track_id]);
+        const [result] = await db.query(query, [track_id]);
         res.json(result);
     } catch (err) {
         console.error('Error fetching electives:', err);
         res.status(500).send('Server error');
     }
 });
-
 
 // Start server
 app.listen(port, () => {

@@ -12,7 +12,8 @@ import Category from './components/category';
 import Domain from './components/domain';
 import Admin from './components/Admin';
 import Subject from './components/subject';
-import { UserProvider } from './contexts/userContext/UserContext.jsx'; // Ensure you import UserProvider
+import { UserProvider } from './contexts/userContext/UserContext'; // Ensure you import UserProvider
+import { AuthProvider } from './contexts/authContexts/index'; // Ensure you import AuthProvider
 
 const Layout = ({ isAdmin, setIsAdmin }) => {
   const location = useLocation();
@@ -56,12 +57,14 @@ const App = () => {
   };
 
   return (
-    <UserProvider>
-      <Router>
-        <Layout isAdmin={isAdmin} setIsAdmin={setIsAdmin} />
-        <UserForm onSubmit={handleFormSubmit} />
-      </Router>
-    </UserProvider>
+    <AuthProvider>
+      <UserProvider>
+        <Router>
+          <Layout isAdmin={isAdmin} setIsAdmin={setIsAdmin} />
+          <UserForm onSubmit={handleFormSubmit} />
+        </Router>
+      </UserProvider>
+    </AuthProvider>
   );
 };
 
