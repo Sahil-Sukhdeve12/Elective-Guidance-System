@@ -1,5 +1,6 @@
-import React from 'react';
 import { Bar, Pie, Line } from 'react-chartjs-2';
+import PropTypes from 'prop-types';
+
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -139,6 +140,20 @@ const GraphComponent = ({ statistics }) => {
             </div>
         </div>
     );
+};
+
+// GraphComponent.propTypes = {
+//     statistics: PropTypes.object.isRequired,
+//     collegeData: PropTypes.object.isRequired,
+//     chartOptions: PropTypes.object.isRequired,
+// };
+
+GraphComponent.propTypes = {
+    statistics: PropTypes.shape({
+        semesterCounts: PropTypes.object,
+        departmentCounts: PropTypes.object,
+        collegeCounts: PropTypes.object
+    }).isRequired
 };
 
 export default GraphComponent;

@@ -1,5 +1,5 @@
 // UserContext.js
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect } from 'react';
 import { useAuth } from '../authContexts/index'; // Import the custom hook from your AuthContext
 import PropTypes from 'prop-types';
 

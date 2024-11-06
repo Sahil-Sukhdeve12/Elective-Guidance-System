@@ -20,8 +20,10 @@ const Login = ({setIsAdmin}) => {
 
       if (email === 'minorprojectadmin@gmail.com' && password === '12@Admin12') {
         setIsAdmin(true);
+        localStorage.setItem('isAdmin', 'true');
       } else {
         setIsAdmin(false);
+        localStorage.setItem('isAdmin', 'false');
       }
 
       if (firstLogin) {

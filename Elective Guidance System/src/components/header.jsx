@@ -1,17 +1,25 @@
-
 import logo from "../images_centre/logo.png";
 import { Link } from "react-router-dom";
 import { doSignOut } from '../firebase/auth';
 import { useNavigate } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
+import { useEffect,useState } from "react";  
 
-const Header = ({ isAdmin }) => {
+const Header = () => {
+  const [isAdmin, setIsAdmin] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const adminStatus = localStorage.getItem('isAdmin') === 'true';
+    setIsAdmin(adminStatus);
+  }, []);
 
   const handleLogout = async () => {
     try {
       await doSignOut();
+      localStorage.removeItem('isAdmin');
+      setIsAdmin(false);
       navigate('/');
     } catch (error) {
       console.error("Error signing out: ", error);
@@ -37,15 +45,18 @@ const Header = ({ isAdmin }) => {
               </li>
             )}
           </ul>
-          <button className="btn btn-outline-danger" onClick={handleLogout}>Logout</button>
+          <button className="btn btn-outline-danger" onClick={handleLogout} style={{ width: '80px' }}>
+            Logout</button>
         </div>
       </div>
     </div>
   );
 };
 
-Header.propTypes = {
-  isAdmin: PropTypes.bool.isRequired,
-};
+// Header.propTypes = {
+//   isAdmin: PropTypes.bool.isRequired,
+//   handleLogout: PropTypes.func.isRequired,
+//   logo: PropTypes.string.isRequired,
+// };
 
 export default Header;
