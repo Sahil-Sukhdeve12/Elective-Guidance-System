@@ -514,7 +514,7 @@ const EditModal = ({ isOpen, onClose, onSave, modalType, setModalType }) => {
                         )}
                     </form>
                 )}
-                
+
                 {modalType === "Elective" && actionType && (
                     <form>
                         {/* Add Elective Form */}
@@ -584,62 +584,84 @@ const EditModal = ({ isOpen, onClose, onSave, modalType, setModalType }) => {
                         {actionType === "Update" && (
                             <>
                                 <label>
-                                    Select Elective to Update:
+                                    Select Track:
                                     <select
-                                        name="selectedElectiveToUpdate"
-                                        value={formData.selectedElectiveToUpdate}
+                                        name="Track_id"
+                                        value={formData.Track_id}
                                         onChange={handleInputChange}
                                     >
-                                        <option value="">Select Elective</option>
-                                        {electives.map(elective => (
-                                            <option key={elective.Elective_Number} value={elective.Elective_Number}>
-                                                {elective.Elective_Name} - {elective.Course_Code}
+                                        <option value="">Select Track</option>
+                                        {tracks.map(track => (
+                                            <option key={track.Track_id} value={track.Track_id}>
+                                                {track.Track_Name}
                                             </option>
                                         ))}
                                     </select>
                                 </label>
 
-                                <label>
-                                    Elective Name:
-                                    <input
-                                        type="text"
-                                        name="Elective_Name"
-                                        value={formData.Elective_Name}
-                                        onChange={handleInputChange}
-                                    />
-                                </label>
+                                {formData.Track_id && (
+                                    <>
+                                        <label>
+                                            Select Elective to Update:
+                                            <select
+                                                name="selectedElectiveToUpdate"
+                                                value={formData.selectedElectiveToUpdate}
+                                                onChange={handleInputChange}
+                                            >
+                                                <option value="">Select Elective</option>
+                                                {electives
+                                                    .filter(elective => elective.Track_id === formData.Track_id)
+                                                    .map(elective => (
+                                                        <option key={elective.Elective_Number} value={elective.Elective_Number}>
+                                                            {elective.Elective_Name} - {elective.Course_Code}
+                                                        </option>
+                                                    ))}
+                                            </select>
+                                        </label>
 
-                                <label>
-                                    Course Code:
-                                    <input
-                                        type="text"
-                                        name="Course_Code"
-                                        value={formData.Course_Code}
-                                        onChange={handleInputChange}
-                                    />
-                                </label>
+                                        <label>
+                                            Elective Name:
+                                            <input
+                                                type="text"
+                                                name="Elective_Name"
+                                                value={formData.Elective_Name}
+                                                onChange={handleInputChange}
+                                            />
+                                        </label>
 
-                                <label>
-                                    Credits:
-                                    <input
-                                        type="number"
-                                        name="Credits"
-                                        value={formData.Credits}
-                                        onChange={handleInputChange}
-                                    />
-                                </label>
+                                        <label>
+                                            Course Code:
+                                            <input
+                                                type="text"
+                                                name="Course_Code"
+                                                value={formData.Course_Code}
+                                                onChange={handleInputChange}
+                                            />
+                                        </label>
 
-                                <label>
-                                    Semester:
-                                    <input
-                                        type="text"
-                                        name="Semester"
-                                        value={formData.Semester}
-                                        onChange={handleInputChange}
-                                    />
-                                </label>
+                                        <label>
+                                            Credits:
+                                            <input
+                                                type="number"
+                                                name="Credits"
+                                                value={formData.Credits}
+                                                onChange={handleInputChange}
+                                            />
+                                        </label>
 
-                                <button type="button" onClick={handleUpdateElective}>Update Elective</button>
+                                        <label>
+                                            Semester:
+                                            <input
+                                                type="text"
+                                                name="Semester"
+                                                value={formData.Semester}
+                                                onChange={handleInputChange}
+                                            />
+                                        </label>
+
+                                        <button type="button" onClick={handleUpdateElective}>Update Elective</button>
+                                    </>
+                                )}
                             </>
                         )}
 
@@ -653,11 +675,13 @@ const EditModal = ({ isOpen, onClose, onSave, modalType, setModalType }) => {
                                         onChange={handleInputChange}
                                     >
                                         <option value="">Select Elective</option>
-                                        {electives.map(elective => (
-                                            <option key={elective.Elective_Number} value={elective.Elective_Number}>
-                                                {elective.Elective_Name} - {elective.Course_Code}
-                                            </option>
-                                        ))}
+                                        {electives
+                                            .filter(elective => elective.Track_id === formData.Track_id)
+                                            .map(elective => (
+                                                <option key={elective.Elective_Number} value={elective.Elective_Number}>
+                                                    {elective.Elective_Name} - {elective.Course_Code}
+                                                </option>
+                                            ))}
                                     </select>
                                 </label>
 
@@ -667,48 +691,6 @@ const EditModal = ({ isOpen, onClose, onSave, modalType, setModalType }) => {
                     </form>
                 )}
 
-                {/* Step 2: Show Elective Table (after Track is selected) */}
-                {formData.Track_id && electives.length > 0 && (
-                    <div>
-                        <h3>Electives for Selected Track</h3>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Elective Name</th>
-                                    <th>Course Code</th>
-                                    <th>Credits</th>
-                                    <th>Semester</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {electives.map((elective) => (
-                                    <tr key={elective.Elective_Number}>
-                                        <td>{elective.Elective_Name}</td>
-                                        <td>{elective.Course_Code}</td>
-                                        <td>{elective.Credits}</td>
-                                        <td>{elective.Semester}</td>
-                                        <td>
-                                            <button onClick={() => setFormData({
-                                                ...formData,
-                                                selectedElectiveToUpdate: elective.Elective_Number,
-                                                Elective_Name: elective.Elective_Name,
-                                                Course_Code: elective.Course_Code,
-                                                Credits: elective.Credits,
-                                                Semester: elective.Semester,
-                                            })}>
-                                                Update
-                                            </button>
-                                            <button onClick={() => handleDeleteElective()}>
-                                                Delete
-                                            </button>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-                )}                {/* Step 4: Always show Save and Close buttons at the bottom */}
                 <div className="modal-footer">
                     <button type="button" onClick={onClose}>Close</button>
                 </div>

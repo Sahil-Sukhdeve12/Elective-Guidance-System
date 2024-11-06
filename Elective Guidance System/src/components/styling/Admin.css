@@ -142,6 +142,9 @@
     font-size: 18px;
     font-weight: bold;
     color: #555;
+    max-height: 400px; /* Set a max-height for scrolling (adjust as needed) */
+    /* Alternatively, use a fixed height */
+    /* height: 400px; */
 }
 
 /* Table styling within student data */
