@@ -11,19 +11,21 @@ const Signup = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [department, setDepartment] = useState('');
-  const [departmentsList, setDepartmentsList] = useState([]); // New state for departments list
+  const [departmentId, setDepartmentId] = useState(''); // This will store departmentId as a string initially
+  const [departmentsList, setDepartmentsList] = useState([]); // List of departments
   const [error, setError] = useState('');
   const [enrollment_no, setEnrollmentNo] = useState('');
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Convert departmentId to a number explicitly before storing it in Firestore
     const formData = {
       name,
       email,
       password,
-      department,
+      department: Number(departmentId), // Convert departmentId to a number
       enrollment_no
     };
 
@@ -32,11 +34,12 @@ const Signup = () => {
       const auth = getAuth();
       await createUserWithEmailAndPassword(auth, email, password);
 
-      await addDoc(collection(db, 'users'), formData); // Store data in Firestore
+      // Store the user data in Firestore, including the department as a number
+      await addDoc(collection(db, 'users'), formData);
 
-      navigate('/'); // Redirect to login page after successful sign-up
+      navigate('/'); // Redirect to the login page after successful sign-up
     } catch (error) {
-      setError(error.message);
+      setError(error.message); // Display error message if sign-up fails
     }
   };
 
@@ -44,9 +47,8 @@ const Signup = () => {
     const fetchDepartments = async () => {
       try {
         const response = await axios.get('http://localhost:5000/departments');
-        // Assuming response.data is an array of department objects
-        console.log(response.data); // Check the structure
-        setDepartmentsList(response.data); // Set the departments list directly
+        console.log(response.data); // Log department data for debugging
+        setDepartmentsList(response.data); // Set the departments list from the API response
       } catch (error) {
         console.error('Error fetching departments:', error);
       }
@@ -60,6 +62,8 @@ const Signup = () => {
       <form onSubmit={handleSubmit}>
         <h2 style={{ textAlign: "center" }}>Sign Up</h2>
         {error && <p className="error">{error}</p>}
+
+        {/* Name Input */}
         <div className="form-group">
           <label>Name</label>
           <input
@@ -71,23 +75,25 @@ const Signup = () => {
           />
         </div>
 
+        {/* Department Dropdown */}
         <div>
           <label>Department</label>
           <select
             className="form-control"
-            value={department}
-            onChange={(e) => setDepartment(e.target.value)}
+            value={departmentId} // departmentId value here
+            onChange={(e) => setDepartmentId(e.target.value)} // Save departmentId
             required
           >
             <option value="" disabled>Select a department</option>
             {departmentsList.map((dept) => (
-              <option key={dept.department_id} value={dept.department_name}>
-                {dept.department_name}
+              <option key={dept.department_id} value={dept.department_id}>
+                {dept.department_name} {/* Display department name */}
               </option>
             ))}
           </select>
         </div>
 
+        {/* Enrollment Number */}
         <div className="form-group">
           <label>Enrollment Number</label>
           <input
@@ -99,6 +105,7 @@ const Signup = () => {
           />
         </div>
 
+        {/* Email Input */}
         <div className="form-group">
           <label>Email</label>
           <input
@@ -110,6 +117,7 @@ const Signup = () => {
           />
         </div>
 
+        {/* Password Input */}
         <div className="form-group">
           <label>Password</label>
           <input
@@ -121,10 +129,12 @@ const Signup = () => {
           />
         </div>
 
+        {/* Submit Button */}
         <div className="text-center">
           <button type="submit" className="btn btn-primary">Sign Up</button>
         </div>
 
+        {/* Sign In Link */}
         <div className="d-flex justify-content-between align-items-center mt-3">
           <p className="mb-0" style={{ marginLeft: "150px" }}>Have an account?</p>
           <Link to="/" className="btn">Sign in</Link>
