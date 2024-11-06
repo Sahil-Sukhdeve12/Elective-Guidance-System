@@ -1,4 +1,4 @@
-import { createBrowserRouter,RouterProvider } from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 // import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { useState } from "react";
 import Signup from "./signup";
@@ -12,74 +12,71 @@ import Error from "./Error";
 import Profile from "./profile";
 import Category from "./category";
 
-const Body=()=>{
+const Body = () => {
     const [isAdmin, setIsAdmin] = useState(false);
 
-    const appRouter=createBrowserRouter([
+    const appRouter = createBrowserRouter([
         {
-            path:"/",
-            element:<Login setIsAdmin={setIsAdmin}/>
+            path: "/",
+            element: <Login setIsAdmin={setIsAdmin} />,
         },
         {
-            path:"/signup",
-            element:<Signup/>
+            path: "/signup",
+            element: <Signup />,
         },
         {
-            path:"/domain/:categoryId",
-            element:<Domain/>
+            path: "/domain/:categoryId", // Use categoryId as a parameter
+            element: <Domain />,
         },
         {
-            path:"/subject",
-            element:<Subject/>
+            path: "/electives/:trackId", // Correct path for electives
+            element: <Subject />, // Component that will be rendered when this route is hit
+        },        
+        {
+            path: "/forgotPassword",
+            element: <ForgotPassword />,
         },
         {
-            path:"/admin",
-            element:<Admin/>
+            path: "*", // Catch-all route for error handling
+            element: <Error />,
         },
         {
-            path:"/forgotPassword",
-            element:<ForgotPassword/>
-        },{
-            path:"*",
-            element:<Error/>
-        },{
-            path:"/category",
-            element:<Category/>
-        },{
-            path:"/profile",
-            element:<Profile/>
-        }
-    ]);
-
+            path: "/category",
+            element: <Category />,
+        },
+        {
+            path: "/profile",
+            element: <Profile />,
+        },]);
     // Conditionally add the admin route if the user is an admin
     if (isAdmin) {
-    appRouter.routes.push({
-      path: '/admin',
-      element: <Admin />,
-    });
+        appRouter.routes.push({
+            path: '/admin',
+            element: <Admin />,
+        });
     }
 
-    return(
+    return (
         <div>
             {/* <Header isAdmin={isAdmin} /> */}
-            <RouterProvider router={appRouter}/>
+            <RouterProvider router={appRouter} />
         </div>
     )
 
-    // return (
-    //     <Router>
-    //   <Header isAdmin={isAdmin} />
-    //   <Routes>
-    //     <Route path="/" element={<Login setIsAdmin={setIsAdmin} />} />
-    //     <Route path="/domain" element={<Domain />} />
-    //     <Route path="/forgot-password" element={<ForgotPassword />} />
-    //     {isAdmin && <Route path="/admin" element={<Admin />} />}
-    //     <Route path="/signup" element={<SignUp />} />
-    //     <Route path="*" element={<Error />} />
-    //     <Route path="/subject" element={<Subject />} />
-    //   </Routes>
-    // </Router>
-    //   );
+    return (
+        <Router>
+            <Header isAdmin={isAdmin} />
+            <Routes>
+                <Route path="/" element={<Login setIsAdmin={setIsAdmin} />} />
+                <Route path="/domain" element={<Domain />} />
+                <Route path="/forgot-password" element={<ForgotPassword />} />
+                {isAdmin && <Route path="/admin" element={<Admin />} />}
+                <Route path="/signup" element={<SignUp />} />
+                <Route path="*" element={<Error />} />
+                <Route path="/subject" element={<Subject />} />
+            </Routes>
+        </Router>
+    );
 }
 
 export default Body;

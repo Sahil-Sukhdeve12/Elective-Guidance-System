@@ -27,12 +27,12 @@ const Layout = ({ isAdmin, setIsAdmin }) => {
         <Route path="/" element={<Login setIsAdmin={setIsAdmin} />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/forgotPassword" element={<ForgotPassword />} />
-        <Route path="/profile" element={<Profile userId='someUserId' />} />
+        <Route path="/profile" element={<Profile userId="someUserId" />} />
         <Route path="/category" element={<Category />} />
         <Route path="/domain/:categoryId" element={<Domain />} />
         <Route path="/admin" element={<Admin />} />
         <Route path="*" element={<Error />} />
-        <Route path="/subject" element={<Subject />} />
+        <Route path="/electives/:trackId" element={<Subject />} />
       </Routes>
     </>
   );
@@ -50,7 +50,8 @@ const App = () => {
   // For submission form
   const handleFormSubmit = async (userInfo) => {
     try {
-      await db.collection('users').add(userInfo); // Assuming db is Firestore instance
+      // Assuming db is Firestore instance (make sure Firestore is initialized correctly)
+      await db.collection('users').add(userInfo); 
       alert('Information saved successfully!');
     } catch (error) {
       console.error('Error saving information: ', error);

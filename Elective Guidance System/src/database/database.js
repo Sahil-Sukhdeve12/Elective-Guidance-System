@@ -241,21 +241,32 @@ app.post('/track_department', async (req, res) => {
 // --------------------
 
 // Get electives by track
+
 app.get('/electives', async (req, res) => {
     const { track_id } = req.query;
+
     if (!track_id) {
         return res.status(400).json({ error: 'Track ID is required' });
     }
 
+    const trackId = parseInt(track_id, 10); // Ensure trackId is a number
+    if (isNaN(trackId)) {
+        return res.status(400).json({ error: 'Track ID must be a valid number' });
+    }
+
     const query = 'SELECT * FROM electives WHERE Track_id = ?';
     try {
-        const [results] = await db.query(query, [track_id]);
+        const [results] = await db.query(query, [trackId]);
+        if (results.length === 0) {
+            return res.status(404).json({ error: 'No electives found for the given track ID' });
+        }
         res.json(results);
     } catch (err) {
         console.error('Error fetching electives:', err);
         res.status(500).send('Server error');
     }
 });
+
 
 // Add a new elective
 app.post('/electives', async (req, res) => {
