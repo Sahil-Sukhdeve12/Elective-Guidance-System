@@ -25,6 +25,3 @@ dist-ssr
 
 dataconnect
 generated/
-
-firebase/
-contexts/
