@@ -3,73 +3,136 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 60vh; /* Height of the container */
-    background-color: #f8f9fa; /* Light background color */
-    margin: 0 auto; /* Center the container horizontally */
-    border-radius: 10px; /* Rounded corners */
-    border: 1px solid #ced4da; /* Outline for the div */
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2), 0 4px 15px rgba(0, 0, 0, 0.1); /* More pronounced shadow for depth */
-    padding: 20px; /* Padding inside the container */
-    transition: transform 0.3s; /* Transition for scaling effect */
-    max-width: 400px; /* Set a maximum width */
-    width: 90%; /* Set width to 90% for smaller screens */
+    height: 60vh;
+    /* Height of the container */
+    background-color: #f8f9fa;
+    /* Light background color */
+    margin: 0 auto;
+    /* Center the container horizontally */
+    border-radius: 10px;
+    /* Rounded corners */
+    border: 1px solid #ced4da;
+    /* Outline for the div */
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2), 0 4px 15px rgba(0, 0, 0, 0.1);
+    /* More pronounced shadow for depth */
+    padding: 20px;
+    /* Padding inside the container */
+    transition: transform 0.3s;
+    /* Transition for scaling effect */
+    max-width: 400px;
+    /* Set a maximum width */
+    width: 90%;
+    /* Set width to 90% for smaller screens */
 }
 
 /* .category-container:hover {
     transform: translateY(-5px);
 } */
 
+/* Back button styling */
+.back-button {
+    padding: 12px 25px;
+    height: 80px;
+    width: 150px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 18px;
+    transition: background-color 0.3s ease;
+}
+
+.back-button:hover {
+    background-color: #0056b3;
+}
+
+.back-button:focus {
+    outline: none;
+}
+
 .category-title {
-    font-size: 2.5rem; /* Increase font size */
-    color: #343a40; /* Dark gray color */
-    font-weight: bold; /* Bold text */
-    margin-bottom: 20px; /* Add bottom margin */
-    text-align: center; /* Center the title */
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); /* Subtle text shadow */
+    font-size: 2.5rem;
+    /* Increase font size */
+    color: #343a40;
+    /* Dark gray color */
+    font-weight: bold;
+    /* Bold text */
+    margin-bottom: 20px;
+    /* Add bottom margin */
+    text-align: center;
+    /* Center the title */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+    /* Subtle text shadow */
 }
 
 .custom-select {
-    width: 100%; /* Use full width of the container */
-    max-width: 250px; /* Set a maximum width for the dropdown */
-    padding: 10px; /* Padding for better touch targets */
-    border: 1px solid #ced4da; /* Border for dropdown */
-    border-radius: 5px; /* Rounded corners */
-    background-color: #ffffff; /* White background */
-    font-size: 1rem; /* Font size */
-    margin-top: 10px; /* Add some margin for spacing */
-    transition: border-color 0.3s; /* Smooth transition for focus */
+    width: 100%;
+    /* Use full width of the container */
+    max-width: 250px;
+    /* Set a maximum width for the dropdown */
+    padding: 10px;
+    /* Padding for better touch targets */
+    border: 1px solid #ced4da;
+    /* Border for dropdown */
+    border-radius: 5px;
+    /* Rounded corners */
+    background-color: #ffffff;
+    /* White background */
+    font-size: 1rem;
+    /* Font size */
+    margin-top: 10px;
+    /* Add some margin for spacing */
+    transition: border-color 0.3s;
+    /* Smooth transition for focus */
 }
 
 .custom-select:focus {
-    border-color: #80bdff; /* Change border color on focus */
-    outline: none; /* Remove default outline */
+    border-color: #80bdff;
+    /* Change border color on focus */
+    outline: none;
+    /* Remove default outline */
 }
 
-.btn-primary {
-    width: 100%; /* Full width for the button */
-    max-width: 150px; /* Set maximum width for button */
-    margin-top: 15px; /* Space above the button */
-    padding: 10px; /* Padding inside the button */
-    border-radius: 5px; /* Rounded corners */
-    background-color: #007bff; /* Bootstrap primary color */
-    color: white; /* White text color */
-    border: none; /* No border */
-    cursor: pointer; /* Pointer cursor on hover */
-    transition: background-color 0.3s; /* Smooth transition */
+.button-next {
+    width: 100%;
+    /* Full width for the button */
+    max-width: 150px;
+    /* Set maximum width for button */
+    margin-top: 15px;
+    /* Space above the button */
+    padding: 10px;
+    /* Padding inside the button */
+    border-radius: 5px;
+    /* Rounded corners */
+    background-color: #3cb371;
+    /* Bootstrap primary color */
+    color: white;
+    /* White text color */
+    border: none;
+    /* No border */
+    cursor: pointer;
+    /* Pointer cursor on hover */
+    transition: background-color 0.3s;
+    /* Smooth transition */
 }
 
-.btn-primary:hover {
-    background-color: #0056b3; /* Darker blue on hover */
+.button-next:hover {
+    background-color: #32cd32;
+    /* Darker blue on hover */
 }
 
-.btn-primary:disabled {
-    background-color: #c0c0c0; /* Grey out disabled button */
-    cursor: not-allowed; /* Not-allowed cursor */
+.button-next:disabled {
+    background-color: #c0c0c0;
+    /* Grey out disabled button */
+    cursor: not-allowed;
+    /* Not-allowed cursor */
 }
 
 .center-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 80vh; /* Full viewport height */
-  }
+    height: 80vh;
+    /* Full viewport height */
+}

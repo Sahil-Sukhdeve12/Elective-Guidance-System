@@ -29,10 +29,11 @@ const Admin = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalType, setModalType] = useState('');
     const [departments, setDepartments] = useState([]);
-
+    const [tracks, setTracks] = useState([]);
     useEffect(() => {
         loadData();
         loadDepartments();
+        loadTracks();
     }, []);
 
     const loadDepartments = async () => {
@@ -41,6 +42,15 @@ const Admin = () => {
             setDepartments(response.data);
         } catch (error) {
             console.error('Failed to load departments', error);
+        }
+    };
+
+    const loadTracks = async () => {
+        try {
+            const response = await axios.get('http://localhost:5000/tracks');
+            setTracks(response.data);
+        } catch (error) {
+            console.error('Failed to load tracks', error);
         }
     };
 
@@ -145,14 +155,19 @@ const Admin = () => {
         return department ? department.department_name : 'Unknown';
     };
 
+    const getTrackName = (trackId) => {
+        const track = tracks.find(track => track.track_id === trackId);
+        return track ? track.Track_Name : 'Unknown';
+    };
+
     return (
         <div className="admin-body">
             <div className="admin-container">
-                <div className="admin-stats">
+                {/*<div className="admin-stats">
                     <h2>Statistics</h2>
                     {Statistics ? <GraphComponent statistics={Statistics} /> : <div>Loading statistics...</div>}
                 </div>
-
+                */}
                 <div className="option-container">
                     <div className="container-1">
                         <FilterSection
@@ -165,8 +180,7 @@ const Admin = () => {
                             uniqueSections={uniqueSections}
                             applyFilters={applyFilters}
                         />
-
-                        <UserTable filteredUsers={filteredUsers} getDepartmentName={getDepartmentName} />
+                        <UserTable filteredUsers={filteredUsers} getDepartmentName={getDepartmentName} getTrackName={getTrackName} />
                     </div>
 
                     <button onClick={() => downloadCSV(filteredUsers)}>Download CSV</button>

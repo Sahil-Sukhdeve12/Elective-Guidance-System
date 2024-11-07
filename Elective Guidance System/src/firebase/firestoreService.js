@@ -16,7 +16,8 @@ export const addUserData = async (userData) => {
             section: userData.section,
             classRollNo: userData.classRollNo, // Adjusted key name to camelCase
             email: userData.email,
-            password: userData.password, // Consider handling password securely
+            password: userData.password,
+            track: user.track, // Consider handling password securely
         };
 
         const docRef = await addDoc(collection(db, "users"), userSchema);

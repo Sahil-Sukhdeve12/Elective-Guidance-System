@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { db } from '../firebase/firebaseConfig';
-import { collection, addDoc } from 'firebase/firestore';
+import { collection, addDoc,doc,setDoc} from 'firebase/firestore';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'; // Import Firebase Auth functions
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
@@ -32,10 +32,15 @@ const Signup = () => {
     try {
       // Create user in Firebase Authentication
       const auth = getAuth();
-      await createUserWithEmailAndPassword(auth, email, password);
+      // await createUserWithEmailAndPassword(auth, email, password);
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
 
       // Store the user data in Firestore, including the department as a number
-      await addDoc(collection(db, 'users'), formData);
+      // await addDoc(collection(db, 'users',user.uid), formData);
+
+      // Store user data in Firestore
+      await setDoc(doc(db, 'users', user.uid), formData);
 
       navigate('/'); // Redirect to the login page after successful sign-up
     } catch (error) {

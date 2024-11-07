@@ -28,6 +28,11 @@ const Category = () => {
         }
     };
 
+    // Back button handler
+    const handleBack = () => {
+        navigate(-1); // Go back to the previous page
+    };
+
     return (
         <div className="center-container">
             <div className="category-container">
@@ -40,8 +45,11 @@ const Category = () => {
                         </option>
                     ))}
                 </select>
-                <button onClick={handleSelect} disabled={!selectedCategory} className="btn-primary">
+                <button onClick={handleSelect} disabled={!selectedCategory} className="button-next">
                     Go to Domain
+                </button>
+                <button onClick={handleBack} className="back-button">
+                    &lt; Back to Profile
                 </button>
             </div>
         </div>

@@ -134,6 +134,7 @@
 }
 
 /* Student data styling */
+/* Table styling within student data */
 .student-data {
     flex: 1; /* Makes it flexible to occupy available height */
     background-color: #cfcfcf;
@@ -143,11 +144,10 @@
     font-weight: bold;
     color: #555;
     max-height: 400px; /* Set a max-height for scrolling (adjust as needed) */
-    /* Alternatively, use a fixed height */
-    /* height: 400px; */
+    position: relative; /* This is important for sticky header */
 }
 
-/* Table styling within student data */
+/* Table styling */
 .student-data table {
     width: 100%;
     border-collapse: collapse; /* Removes space between borders */
@@ -160,6 +160,9 @@
     padding: 12px; /* Padding for header cells */
     text-align: left; /* Align text to the left */
     border-bottom: 2px solid #ddd; /* Bottom border for separation */
+    position: sticky; /* Make header sticky */
+    top: 0; /* Stick the header to the top */
+    z-index: 1; /* Ensure the header stays above the table body */
 }
 
 /* Table cell styling */

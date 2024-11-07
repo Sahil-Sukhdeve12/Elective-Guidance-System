@@ -95,7 +95,12 @@ const Domain = () => {
         if (selectedTrack) {
             navigate(`/electives/${selectedTrack}`);
         }
-    };    
+    };
+
+    // Back button handler
+    const handleBack = () => {
+        navigate(-1); // Go back to the previous page
+    };
 
     return (
         <div className="d-flex justify-content-center align-items-center vh-75">
@@ -108,10 +113,13 @@ const Domain = () => {
                             {track.Track_Name}
                         </option>
                     ))}
-                </select> 
-                
+                </select>
+
                 <button onClick={handleSelect} disabled={!selectedTrack} className="btn btn-primary">
                     Go to Electives
+                </button>
+                <button onClick={handleBack} className="back-button">
+                    &lt; Back to Select Category
                 </button>
             </div>
         </div>
