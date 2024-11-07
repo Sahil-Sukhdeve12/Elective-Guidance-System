@@ -189,7 +189,9 @@ const Profile = () => {
               required
             >
               <option value="" disabled>Select College</option>
-              <option value="College A">G H Raisoni College of Engineering and Management Nagpur</option>
+              <option value="G H Raisoni College of Engineering and Management Nagpur">
+                G H Raisoni College of Engineering and Management Nagpur
+                </option>
             </select>
           </div>
           <div className="mb-3">

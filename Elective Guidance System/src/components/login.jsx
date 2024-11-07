@@ -47,9 +47,9 @@ const Login = ({setIsAdmin}) => {
   };
 
   return (
-    <div className="login-container">
+    <div className="login-container d-flex flex-column align-items-center">
       <form className="border p-4 shadow-sm rounded bg-light" onSubmit={handleSubmit}>
-        <h2 className="text-center mb-4">Sign In</h2>
+        <h2 className="text-center mb-4" style={{textAlign:"center"}}>Sign In</h2>
         {error && <p className="text-danger">{error}</p>}
         <div className="mb-3">
           <label htmlFor="email" className="form-label">Email:</label>
@@ -80,13 +80,23 @@ const Login = ({setIsAdmin}) => {
           <button type="submit" className="btn btn-primary w-80">Sign In</button>
         </div>
         
-        <div className="d-flex justify-content-between align-items-center mt-3">
+        {/* <div className="d-flex justify-content-between align-items-center mt-3">
             <p className="mb-0" style={{marginLeft:'100px'}}>Don&apos;t have an account?</p>
             <Link to="/signup" className="btn" style={{marginRight:'10px'}}>Signup</Link>
         </div>
         <div className="d-flex justify-content-end" style={{marginLeft:'80px'}}>
           <Link to="/forgotPassword" className="btn btn-link">Forgot Password?</Link>
+        </div> */}
+
+        <div className="d-flex justify-content-between align-items-center mt-3">
+          <p className="mb-0" style={{marginLeft:'75px'}}>Don't have an account?</p>
+          <Link to="/signup" className="btn btn-link" style={{marginRight:'10px'}}>Signup</Link>
         </div>
+        <div className="d-flex justify-content-center mt-2" style={{marginLeft:'100px'}}>
+          <Link to="/forgotPassword" className="btn btn-link">Forgot Password?</Link>
+        </div>
+
+        
         
     </form>
     </div>

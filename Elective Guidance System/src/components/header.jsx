@@ -34,11 +34,11 @@ const Header = () => {
         </header>
         <div className="collapse navbar-collapse">
           <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
-            {isAdmin && (
+            {/* {isAdmin && (
               <li className="nav-item" >
                 <Link className="nav-link" to="/domain">Domain</Link>
               </li>
-            )}
+            )} */}
             {isAdmin && (
               <li className="nav-item">
                 <Link className="nav-link" to="/admin">Admin</Link>

@@ -135,13 +135,13 @@ const Signup = () => {
         </div>
 
         {/* Submit Button */}
-        <div className="text-center">
+        <div className="d-flex justify-content-center">
           <button type="submit" className="btn btn-primary">Sign Up</button>
         </div>
 
         {/* Sign In Link */}
         <div className="d-flex justify-content-between align-items-center mt-3">
-          <p className="mb-0" style={{ marginLeft: "150px" }}>Have an account?</p>
+          <p className="mb-0" style={{ marginLeft: "100px" }}>Have an account?</p>
           <Link to="/" className="btn">Sign in</Link>
         </div>
       </form>
