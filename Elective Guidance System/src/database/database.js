@@ -240,6 +240,19 @@ app.post('/track_department', async (req, res) => {
 // Elective Endpoints
 // --------------------
 
+// Get all electives
+
+app.get('/allelectives', async (req, res) => {
+    try {
+        const [results] = await db.query('SELECT * FROM electives');
+        res.json(results);
+    } catch (err) {
+        console.error('Error fetching electives:', err);
+        res.status(500).send('Server error');
+    }
+});
+
+
 // Get electives by track
 
 app.get('/electives', async (req, res) => {
