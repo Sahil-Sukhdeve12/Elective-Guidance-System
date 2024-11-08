@@ -41,9 +41,20 @@ const Header = () => {
             )} */}
             {isAdmin && (
               <li className="nav-item">
+                <Link className="nav-link" to="/category">Category</Link>
+              </li>
+            )}
+            {isAdmin && (
+              <li className="nav-item">
                 <Link className="nav-link" to="/admin">Admin</Link>
               </li>
             )}
+            {isAdmin && (
+              <li className="nav-item">
+                <Link className="nav-link" to="/profile">Profile</Link>
+              </li>
+            )}
+
           </ul>
           <button className="btn btn-outline-danger" onClick={handleLogout} style={{ width: '80px' }}>
             Logout</button>

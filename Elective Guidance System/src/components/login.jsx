@@ -16,20 +16,22 @@ const Login = ({setIsAdmin}) => {
     e.preventDefault();
     try {
       const response = await doSignInWithEmailAndPassword(email, password);
-      const { firstLogin } = response; // Assuming response contains firstLogin flag
+      const { firstLogin, selectedDomain} = response; // Assuming response contains firstLogin flag
 
       if (email === 'minorprojectadmin@gmail.com' && password === '12@Admin12') {
         setIsAdmin(true);
         localStorage.setItem('isAdmin', 'true');
+        navigate('/admin');
       } else {
         setIsAdmin(false);
         localStorage.setItem('isAdmin', 'false');
-      }
+      
 
-      if (firstLogin) {
-        navigate('/category');
-      } else {
-        navigate('/profile');
+        if (firstLogin) {
+          navigate('/profile');
+        } else {
+          navigate(`/subject/${selectedDomain}`);
+        }
       }
     } 
     // catch (error) {
@@ -89,14 +91,12 @@ const Login = ({setIsAdmin}) => {
         </div> */}
 
         <div className="d-flex justify-content-between align-items-center mt-3">
-          <p className="mb-0" style={{marginLeft:'75px'}}>Don't have an account?</p>
+          <p className="mb-0" style={{marginLeft:'75px'}}>Don&apos;t have an account?</p>
           <Link to="/signup" className="btn btn-link" style={{marginRight:'10px'}}>Signup</Link>
         </div>
         <div className="d-flex justify-content-center mt-2" style={{marginLeft:'100px'}}>
           <Link to="/forgotPassword" className="btn btn-link">Forgot Password?</Link>
         </div>
-
-        
         
     </form>
     </div>
