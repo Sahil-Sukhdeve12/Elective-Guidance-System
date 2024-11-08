@@ -98,7 +98,7 @@ const Admin = () => {
         setLoading(false);
     };
 
-    console.log("Userssafda:", uniqueTracks);
+    //console.log("Userssafda:", uniqueTracks);
 
     if (loading) {
         return <div>Loading...</div>;
@@ -247,12 +247,12 @@ const Admin = () => {
                 user.semester,
                 getDepartmentName(user.department),
                 user.section,
-                user.classRollNo,
+                user.class_roll_no,
                 getTrackName(user.open),
                 openElectiveNames, // Add the open electives here
                 getTrackName(user.humanities), // Placeholder for "Humanities" (add the actual value as needed)
                 humanitiesElectiveNames, // Placeholder for "Humanities Elective" (add the actual value as needed)
-                getTrackName(user.department), // Placeholder for "Department Track" (add the actual value as needed)
+                getTrackName(user.department_electives), // Placeholder for "Department Track" (add the actual value as needed)
                 departmentElectiveNames  // Placeholder for "Department Elective" (add the actual value as needed)
             ];
             
@@ -314,8 +314,8 @@ const Admin = () => {
 
     // Fetch open electives for all filtered users
     useEffect(() => {
-        fetchDepartmentElectivesForUsers;
-        fetchHumanitiesElectivesForUsers;
+        fetchDepartmentElectivesForUsers();
+        fetchHumanitiesElectivesForUsers();
         fetchOpenElectivesForUsers();  // Call the async function to fetch electives for all users
     }, [filteredUsers, electives]); // Dependencies to trigger when filteredUsers or electives change
 
@@ -388,8 +388,8 @@ const Admin = () => {
             const results = [];
 
             for (const user of filteredUsers) {
-                if (user.semester && user.department !== undefined) {
-                    const trackId = user.department;
+                if (user.semester && user.department_electives !== undefined) {
+                    const trackId = user.department_electives;
                     const semester = user.semester;
 
                     console.log("User:", user.name, "trackId:", trackId, "semester:", semester);
@@ -410,6 +410,7 @@ const Admin = () => {
             setDepartmentElectivesResults(results);
         }
     };
+    console.log("departmentElectiveResults", departmentElectivesResults);    
 
     return (
         <div className="admin-body">
